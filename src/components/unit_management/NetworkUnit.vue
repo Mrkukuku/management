@@ -405,6 +405,20 @@
                                 <el-button @click="uploads">立即上传</el-button>
                                 <el-button @click="resetUploads">取消</el-button>
                             </el-form-item>
+                             <el-form-item label="测试开始时间">   
+                                <el-time-picker
+                                    v-model="ruleForm.testStartTime"
+                                    format="HH:mm"
+                                >
+                                </el-time-picker> 
+                            </el-form-item>
+                             <el-form-item label="测试结束时间">   
+                                 <el-time-picker
+                                    v-model="ruleForm.testEndTime"
+                                    format="HH:mm"
+                                    >
+                                </el-time-picker>
+                            </el-form-item>
                         </fieldset>
                         <fieldset v-if="ruleForm.regionType!=0">
                             <legend>智慧消防设备安装情况</legend>
@@ -924,6 +938,8 @@ export default {
                         expirationStartTime:'',
                         expirationEndTime:''
                     },
+                    testStartTime:'',//测试起始开始时间
+                    testEndTime:'',//测试起始开始时间
                 }
                 // regionType:null,
             },

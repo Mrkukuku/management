@@ -20,6 +20,10 @@ Vue.use(elementUI)
 Vue.use(VueAxios, axios)
 Vue.use(VueAMap)
 Vue.prototype.$moment = moment
+import * as filters from './directive/validate'
+Object.keys(filters).forEach(key => {//注册全局过滤器
+  Vue.filter(key, filters[key])
+})
 
 /* eslint-disable no-new */
 new Vue({

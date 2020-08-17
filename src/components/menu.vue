@@ -23,6 +23,9 @@
                         </template>
                         <el-menu-item index="1-12"><router-link to="/unitmanagement/everydayRecord">每日一查</router-link></el-menu-item>
                         <!-- <el-menu-item index="1-13"><router-link to="/unitmanagement/ErPollingTask">二维码巡检</router-link></el-menu-item> -->
+                        <el-menu-item index="1-13"><router-link to="/unitmanagement/connectList">消控交接记录</router-link></el-menu-item>
+                        <el-menu-item index="1-14"><router-link to="/unitmanagement/fireWatch">每月防火检查</router-link></el-menu-item>
+                        <el-menu-item index="1-15"><router-link to="/unitmanagement/fireFacility">消防设施维修记录</router-link></el-menu-item>
                     </el-menu-item-group>
                   </el-submenu>
                   <el-submenu index="2">

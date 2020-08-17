@@ -30,6 +30,14 @@
                     姓名:
                     <el-input v-model="name"></el-input>&nbsp;&nbsp;
                     手机号:<el-input v-model="phone"></el-input>
+                    用户类型: <el-select v-model="selectType" placeholder="请选择">
+                        <el-option
+                            v-for="item in options"
+                            :key="item.roleId"
+                            :label="item.roleName"
+                            :value="item.roleId">
+                        </el-option>
+                    </el-select>
                     <el-button type="primary" @click='searchsubmit'>查询</el-button>
                     <el-button @click='searchreset'>重置</el-button>
                     <el-button type="primary" @click="opendialog"><i class="el-icon-plus"></i> 新增</el-button>
@@ -601,7 +609,7 @@ export default {
             page_size: 10,//页数
             fileLoading:false,
             uid:sessionStorage.getItem('user_id'),
-           
+           selectType:''
         }
     },
     components:{
@@ -741,6 +749,7 @@ export default {
         searchreset(){  //条件查询重置
             this.name='';
             this.phone='';
+            this.selectType='';
             this.searchsubmit()
         },
         searchsubmit(){     //条件查询
@@ -755,7 +764,8 @@ export default {
                     pageSize: this.rows,
                     username:this.name,
                     unitId:this.companyId,
-                    phone:this.phone
+                    phone:this.phone,
+                    userType:this.selectType,
                 }
             }).then(res=>{
                 if(res.data.code==0){
@@ -782,7 +792,6 @@ export default {
             }else{
                 this.workTypeFlag=true;
             }
-            
         },
         addPersonWorkTime(){//打开上班时间弹框
             this.personAddTimeDialog=true;
@@ -903,7 +912,7 @@ export default {
           })
         },
         downFile() {//下载单位导入模板
-            location.href="https://oss-kaleidoscope.oss-cn-hangzhou.aliyuncs.com/人员导入模板 .xls";
+            location.href="https://oss-kaleidoscope.oss-cn-hangzhou.aliyuncs.com/人员导入模板.xls";
         },
         uploadsFile(file){//导入单位
             var _this=this;
@@ -963,7 +972,6 @@ export default {
                 this.ruleForm.fireControlPermissions=[1]
             }
         }
-        
     },
     created(){
         if(this.$route.query.token){
@@ -973,7 +981,7 @@ export default {
         }else{
             this.companyId=sessionStorage.getItem('unitId');
         }
-        
+        this.DropdownData()
     }
 }
 </script>
@@ -986,6 +994,7 @@ export default {
                     height:32px;
                 }
             }
+           
         }
         .el-date-range-picker__editor{
             width:140px;
@@ -1028,7 +1037,11 @@ export default {
                 min-height: 400px;
             }
         }
-        
+        .demo-ruleForm{
+            .el-input{
+                width: 278px;
+            }
+        }
     }
     /deep/ .el-dialog{
         width: 700px!important;
@@ -1038,10 +1051,8 @@ export default {
         .el-select{
             width:200px;
         }
-
         .el-date-editor{
             width: 220px!important;
         }
     }
-    
 </style>

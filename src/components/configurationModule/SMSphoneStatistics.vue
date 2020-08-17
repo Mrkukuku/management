@@ -20,7 +20,7 @@
                 ></el-tree>
             </div>
         </el-col>
-        <el-col :span="20" style="height:100%;">
+        <el-col :span="userType==3&&24||20" style="height:100%;">
             <div class="top">
                 开始结束时间:
                 <el-date-picker
@@ -52,6 +52,7 @@
                     <el-table
                         :data="tableData"
                         border
+                        height="600"
                         style="width: 100%">
                         <el-table-column
                         type="selection"
@@ -68,13 +69,61 @@
                         width="100">
                         </el-table-column>
                         <el-table-column
-                        prop="phone"
-                        label="号码"
+                        prop="caller"
+                        label="主叫号码"
                         width="120">
                         </el-table-column>
+                     
+                        <el-table-column
+                        prop="callee"
+                        label="被叫号码"
+                        width="120">
+                        </el-table-column>
+
+                            <el-table-column
+                            prop="duration"
+                            label="通话时间"
+                            width="80">
+                            <template slot-scope="scope"> 
+                                {{ scope.row.duration&&scope.row.duration||0 }} s
+                            </template>
+                            </el-table-column>
+                            <el-table-column
+                            prop="ringTime"
+                            label="响铃时间"
+                            width="160">
+                            </el-table-column>
+                            <el-table-column
+                            prop="originateTime"
+                            label="呼叫发起时间"
+                            width="160"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                            prop="startTime"
+                            label="接通开始时间"
+                            width="160"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                            prop="endTime"
+                            label="通话结束时间"
+                            width="160"
+                            >
+                            </el-table-column>
+                        </el-table-column>
+                         <el-table-column
+                        prop="duration"
+                        label="是否接通"
+                        width="80">
+                         <template slot-scope="scope"> 
+                            {{ scope.row.duration&&'接通'||'未接通' }}
+                        </template>
+                         </el-table-column>
                         <el-table-column
                         prop="content"
                         label="内容"
+                         width="450"
                         >
                         </el-table-column>
                     </el-table>
@@ -176,7 +225,7 @@
                             placeholder="默认全天">
                         </el-time-picker>
                     </el-form-item>
-                     <el-form-item label="测试起始时间">   
+                     <!-- <el-form-item label="测试起始时间">   
                        <el-time-picker
                             v-model="ruleForm.testStartTime"
                             format="HH:mm"
@@ -187,7 +236,7 @@
                             format="HH:mm"
                             >
                         </el-time-picker>
-                    </el-form-item>
+                    </el-form-item> -->
                     
 
                     <el-form-item class="formfooter">
@@ -408,7 +457,6 @@ export default {
                 }
             }).then(res=>{
                 if(res.data.code==0){
-                   
                         _this.tableData=res.data.list;
                         for(var i in _this.tableData){
                             _this.tableData[i].createdTime=this.$moment(_this.tableData[i].createdTime).format("YYYY-MM-DD HH:mm"); 
@@ -438,7 +486,7 @@ export default {
             return data.label.indexOf(value) !== -1;
         },
         //树节点方法
-        renderContent(h, { node, data}) { //树前小图标
+        renderContent(h, { node, data}) {//树前小图标
             return (
               <span>
                 <i class={data.icon}></i>
@@ -520,8 +568,7 @@ export default {
             }).then ( res => {
                 this.peopleOptions = res.data.list
             })
-         
-    },
+        },
         closeSmsPhone(){//关闭短信电话设置
             this.smsPhoneVisible=false;
             Object.assign(this.$data.ruleForm,this.$options.data().ruleForm);
@@ -554,7 +601,7 @@ export default {
         },
         search(){//模糊查询信息列表
             this.pageNum=1;
-            this.$refs.paginationChild.changePageNum(this.pageNum)
+            this.$refs.paginationChild.changePageNum(this.pageNum);
             this.getData();
         },
         resetSearch(){//重置模糊查询字段
@@ -565,11 +612,11 @@ export default {
     },
     mounted(){
         this.getTree();
-        this.userType = sessionStorage.getItem('userTypes')
-        if( this.userType ==3 ){
-            this.unitType=1
+        this.userType = sessionStorage.getItem('userTypes');
+        if( this.userType == 3 ){
+            this.unitType = 1;
         }
-        this.unitId =Number(sessionStorage.getItem('unitId'))
+        this.unitId = Number(sessionStorage.getItem('unitId'));
     },
     watch:{
         filterText(val) {
@@ -590,6 +637,10 @@ export default {
             .el-date-editor{
                 width: 313px!important;
             }
+        }
+        .page_all{
+            position: absolute;
+            bottom: -3px;
         }
          /deep/ .el-select{
             height: auto;

@@ -127,6 +127,24 @@ export default new Router({
           meta:{keepAlive: false},
           component: () => import("@/components/unit_management/PollingSummary.vue")
         },
+        {
+          path:"connectList",
+          name:"消控交接记录",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/connectList.vue")
+        },
+        {
+          path:"fireWatch",
+          name:"每月防火检查",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/fireWatch.vue")
+        },
+        {
+          path:"fireFacility",
+          name:"消防设施维修记录",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/fireFacility.vue")
+        },
       ]
     },
     {

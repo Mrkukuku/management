@@ -111,6 +111,16 @@
                             <el-form-item label="设备安装位置" prop="installAddres">
                                <el-input v-model="ruleForm.installAddres"></el-input>
                             </el-form-item>
+                            <!-- <el-form-item label="设备类型" prop="type">
+                               <el-select v-model="ruleForm.type" placeholder="请选择">
+                                <el-option
+                                    v-for="item in typeOptionsData1"
+                                    :key="item.value"
+                                    :label="item.name"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                            </el-form-item> -->
                             <el-form-item label="二维码有效截至时间">
                                 <el-date-picker
                                     v-model="ruleForm.expireTime"
@@ -201,7 +211,8 @@ export default {
             ruleForm:{
                 name:'',//二维码名称
                 expireTime:'',
-                installAddres:""
+                installAddres:"",
+                type:''
             },
             rules:{
                  name: [
@@ -209,6 +220,9 @@ export default {
                 ],
                  installAddres: [
                     { required: true, message: '请输入设备安装位置', trigger: 'blur' },
+                ],
+                 type: [
+                    { required: true, message: '请选择设备类型', trigger: 'blur' },
                 ],
             },
             singleData:[],//详情获取区域数据
@@ -221,6 +235,24 @@ export default {
                     name:'已过期',
                     value:'1'
                 }
+            ],
+            typeOptionsData1:[
+                {
+                    name:'灭火器',
+                    value:'0'
+                },
+                {
+                    name:'消火栓',
+                    value:'1'
+                },
+                {
+                    name:'水泵房',
+                    value:'2'
+                },
+                {
+                    name:'巡更',
+                    value:'3'
+                },
             ],
             downImg:'',
             mapVisible:false,
@@ -315,9 +347,7 @@ export default {
                     })
                 }
             })
-               
         },
-
         getData(){//获取列表数据
             var _this=this;
             this.axios({
@@ -380,7 +410,6 @@ export default {
         print(content, w = null, h = null) {
             const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
             const dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
-
             const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
             const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
             w = +w === 0 ? width : w;
@@ -396,7 +425,6 @@ export default {
             return myWindow;
         },
         printingBox(data){//打印
-            console.log(data)
             var that=this;
             this.qrList = [data]
             this.$nextTick( ()=> {
