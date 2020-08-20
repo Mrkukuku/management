@@ -41,7 +41,6 @@
                 placeholder="结束日期"
                 class="picker">
                 </el-date-picker>
-
                 <el-button type="primary" @click="seach"> 查询</el-button>
                 <el-button type="primary" @click="exportPolling">导出</el-button>
                 <el-button type="primary" @click="handleReset">重置</el-button>
@@ -56,25 +55,28 @@
                 style="width: 150"
                 >
                 <el-table-column
-                prop="uname"
+                prop="checkDepartment"
                 label="被检查部门或部位"
                 width="280">
                 </el-table-column>
                 <el-table-column
-                prop="nextHandUname"
+                prop="checkPerson"
                 label="参加检查人员"
                 width="320">
                 </el-table-column>
                 <el-table-column
-                prop="lastHandUname"
+                prop="maintenanceType"
                 label="维保方式"
                 width="180">
+                 <template slot-scope="scope">
+                    <span >{{ scope.row.maintenanceType==1&&'自我维保'||'第三方维保' }}</span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 label="提交时间"
                 width="220">
                   <template slot-scope="scope">
-                    <span >{{ scope.row.watchStartTime|timeFormat }}</span>
+                    <span >{{ scope.row.date }}</span>
                 </template>
                 </el-table-column>
                  <el-table-column label="详情">
@@ -82,7 +84,7 @@
                         <el-button
                         size="mini"
                         type="primary"
-                        @click="editData(scope.row.unitId,scope.row.unitName)">查看</el-button>
+                        @click="editData(scope.row)">查看</el-button>
                         <el-button
                     </template>
                 </el-table-column>
@@ -97,40 +99,57 @@
         </el-col>
         </el-row>
          <el-dialog
-                width="475px"
-                title="巡查任务详情"
-                :visible.sync="pollingVisible"
-                id="polling"
-                >
+            width="475px"
+            title="巡检任务详情"
+            :visible.sync="pollingVisible1"
+            id="polling"
+            >
+                <div class="checkImage" v-if="maintenance.maintenanceImgUrl">
+                <div class="title1">
+                    维保照片
+                </div>
+                <div class="imageList">
+                    <img  v-for="(items, index) in maintenance.maintenanceImgUrl" :key="index" :src="items" alt="">
+                </div>
+            </div>
+         </el-dialog>
+         <el-dialog
+            width="475px"
+            title="巡检任务详情"
+            :visible.sync="pollingVisible"
+            id="polling"
+            >
                 <div class="content">
                      <div class="taskName">
-                            <div>被检查部门或部位</div>
-                            <div></div>
+                        <div>被检查部门或部位</div>
+                        <div>{{pollingDetail.department}}</div>
                     </div>
                      <div class="taskName">
-                            <div>检查时间</div>
-                            <div></div>
+                        <div>检查时间</div>
+                        <div>{{pollingDetail.endTimeValue|timeFormat}}</div>
                     </div>
                      <div class="taskName">
-                            <div>参加检查人员</div>
-                            <div></div>
+                        <div>参加检查人员</div>
+                        <div>
+                            <span v-for="(item, index) in pollingDetail.checkPeople" :key="index">{{item}}、</span>
+                        </div>
                     </div>
                     <template v-for="(item, index) in pollingDetail.list" v-if="item.status==1">
                         <div class="taskName">
-                            <div>
-                            <div class="line"></div> 火灾隐患整改及防范措施落实情况
+                            <div class="flex">
+                                 <div class="line"></div> 火灾隐患整改及防范措施落实情况
                             </div>
                         </div>
                         <div class="taskName">
                             <div>是否存在违章情况</div>
                             <div>
-                                <el-radio-group v-model="item.status">
+                                <el-radio-group v-model="item.status1">
                                         <el-radio :label="1">是</el-radio>
                                         <el-radio :label="2">否</el-radio>
                                 </el-radio-group>
                             </div>
                         </div>
-                        <div v-if="item.status==1">
+                        <div v-if="item.status1==1">
                             <div class="title">巡检记录</div>
                             <div class="descript">
                                 <div class="title1">检查情况</div>
@@ -148,9 +167,10 @@
                             </div>
                         </div>
                     </template>
-               
                  <div class="descript">
-                    <div class="title1">处理情况</div>
+                    <div class="flex">
+                        <div class="line"></div> 处理情况
+                    </div>
                     <div class="textarea">
                     </div>
                 </div>
@@ -160,7 +180,6 @@
                 <div class="sign">
                     <img :src="pollingDetail.watchkeeperImgUrl" alt="">
                 </div>
-                <div style="margin-left:15px">巡检人员:{{pollingDetail.uname}}</div>
             </div>
         </el-dialog>
 </div>
@@ -188,7 +207,9 @@ export default {
             endTime:'',
             department:'',
             pollingVisible:false,
+            pollingVisible1:false,
             pollingDetail:{},
+            maintenance:{},
             expireTimeOptionStart: {
                 disabledDate: time => {
                     let beginDateVal = this.endTime;
@@ -214,16 +235,38 @@ export default {
        }
    },
  methods:{
-     exportPolling(){
-
+     editData(data){
+         this.axios({
+            url:"/api/admin/month/inspection/single",
+            method:"post",
+            data:{
+                id:data.id,
+                type:data.maintenanceType
+            }
+        }).then( res =>{
+            if( res.data.code ==0 ){
+                if(data.maintenanceType==1){
+                    this.pollingDetail = res.data.data
+                    this.pollingVisible = true
+                }else{
+                    this.maintenance = res.data.data
+                    this.pollingVisible1 = true
+                }
+            }else{
+                this.$alert(res.data.msg)
+            }
+        })
      },
+    exportPolling(){
+
+    },
     seach(){
         this.currentPage = 1
         this.getDatas()
     },
     getDatas () {
         this.axios({
-            url:"/api/admin/fire/control/handover/list",
+            url:"/api/admin/month/inspection/list",
             method:"post",
             data:{
                 startTime:this.startTime,
@@ -231,24 +274,20 @@ export default {
                 unitId:this.unitId,
                 pageSize:this.rows,
                 pageNum:this.currentPage,
-                uid:this.type,
-                exceptionType:this.type1,
+                uname:this.department,
             }
         }).then( res =>{
             if( res.data.code ==0 ){
-                    this.tableData = res.data.list
-                    // this.tableData&&this.tableData.map( item =>{
-                    //     item.lastLoginTime = item.lastLoginTime&&item.lastLoginTime.slice(0,10)
-                    // })
-                    this.total = res.data.total
+                    this.tableData = res.data.data.list
+                    this.total = res.data.data.total
             }else{
                 this.$alert(res.data.msg)
             }
         })
     },
-     getData(){
+    getData(){
          
-     },
+    },
     handleReset () {//重置
         this.startTime = ''
         this.endTime = ''
@@ -279,7 +318,7 @@ export default {
         this.userType = sessionStorage.getItem('userTypes')
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
-            // this.getDatas()
+            this.getDatas()
         }
     },
 }
@@ -387,6 +426,10 @@ export default {
                     background-color: #1B9BDF;
                     margin-right: 10px;
                     border-radius: 2px;
+                }
+                .flex{
+                    display: flex;
+                    align-items: center;
                 }
             }
             .title{

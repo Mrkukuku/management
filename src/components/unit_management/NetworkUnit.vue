@@ -938,9 +938,10 @@ export default {
                         expirationStartTime:'',
                         expirationEndTime:''
                     },
-                    testStartTime:'',//测试起始开始时间
-                    testEndTime:'',//测试起始开始时间
-                }
+                   
+                },
+                 testStartTime:'',//测试起始开始时间
+                testEndTime:'',//测试起始开始时间
                 // regionType:null,
             },
             rules:{//新增表单验证

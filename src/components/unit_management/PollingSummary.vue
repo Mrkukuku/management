@@ -622,10 +622,9 @@ export default {
     mounted(){
       if(this.$route.query.unitId){
           this.parameter = this.$route.query
+          console.log(this.parameter)
           this.getData()
       }else{
-        //    this.$router.push({path: '/unitmanagement/everydayRecord'});
-        //    this.$store.commit('routeJump/delete_tabs', '/unitmanagement/PollingSummary');
         this.goBack()
       }
     },

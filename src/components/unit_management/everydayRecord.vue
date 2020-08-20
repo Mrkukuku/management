@@ -32,12 +32,14 @@
                 type="date"
                 placeholder="开始日期"
                 :picker-options="expireTimeOptionStart"
+                value-format="yyyy-MM-dd"
                 class="picker">
                 </el-date-picker> -
                 <el-date-picker
                 v-model="endTime"
                 type="date"
                 :picker-options="expireTimeOptionEnd"
+                value-format="yyyy-MM-dd"
                 placeholder="结束日期"
                 class="picker">
                 </el-date-picker>

@@ -111,7 +111,7 @@
                             <el-form-item label="设备安装位置" prop="installAddres">
                                <el-input v-model="ruleForm.installAddres"></el-input>
                             </el-form-item>
-                            <!-- <el-form-item label="设备类型" prop="type">
+                            <el-form-item label="设备类型" prop="type">
                                <el-select v-model="ruleForm.type" placeholder="请选择">
                                 <el-option
                                     v-for="item in typeOptionsData1"
@@ -120,7 +120,7 @@
                                     :value="item.value">
                                 </el-option>
                             </el-select>
-                            </el-form-item> -->
+                            </el-form-item>
                             <el-form-item label="二维码有效截至时间">
                                 <el-date-picker
                                     v-model="ruleForm.expireTime"
@@ -507,7 +507,7 @@ export default {
         /deep/ .el-dialog{
             width: 500px;
             .el-input{
-                width: 80%;
+                width: 248px;
             }
         }
         .mapdialog{
@@ -521,7 +521,6 @@ export default {
                 position: relative;
                 margin-top: -10px!important;
             }
-                
             .el-dialog__body{
                 padding: 0;
             }

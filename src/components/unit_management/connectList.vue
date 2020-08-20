@@ -244,7 +244,23 @@ export default {
    },
  methods:{
      exportPolling(){
-
+          this.axios({
+            url:"/api/admin/fire/control/handover/info/excel",
+            method:"post",
+            data:{
+                startTime:this.startTime,
+                endTime:this.endTime,
+                unitId:this.unitId,
+            }
+        }).then( res =>{
+            if( res.data.code ==0 ){
+                if( res.data.data){
+                    location.href = res.data.data
+                }
+            }
+                if( res.data.msg)this.$alert(res.data.msg)
+            
+        })
      },
     seach(){
         this.currentPage = 1

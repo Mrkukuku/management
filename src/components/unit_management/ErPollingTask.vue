@@ -744,9 +744,6 @@ export default {
         .el-table th div{
             line-height: normal
         }
-         .el-table--border{
-            // border: none;
-        }
        
         .top .el-date-editor{
             width:180px;
