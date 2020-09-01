@@ -14,7 +14,7 @@ module.exports = {
       '/api': {
         // target: 'http://47.99.156.10:8182',  
         // target: 'https://admin.dingrennet.cn',
-        target: 'http://192.168.1.31:8182',
+        target: 'http://192.168.1.31:2009',
         //  target: 'http://192.168.1.112:8182',
         //  target: 'http://192.168.1.128:8182',
          // target: 'http://192.168.1.145:8082',

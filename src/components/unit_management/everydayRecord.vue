@@ -23,7 +23,7 @@
                 </div>
             </el-col> 
          <!-- 头部 -->
-          <el-col :span="20" style='height:100%'>
+          <el-col :span="userType!=1&&24||20" style='height:100%'>
             <div class="top">
                 <div>
                 &nbsp;单位名称：<el-input v-model="username"></el-input>&nbsp;
@@ -803,7 +803,7 @@ export default {
  methods:{
      exportPolling(){
             this.axios({
-                url:"api/admin/fire/control/statistics/info/export",
+                url:"/api/admin/fire/control/statistics/info/export",
                 method:"post",
                 data:{
                     unitName:this.username,

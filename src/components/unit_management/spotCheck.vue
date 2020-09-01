@@ -1,6 +1,6 @@
 <template>
 <!-- 巡检任务 -->
-    <div id='fire_watch' class='allcontent'>
+    <div id='spot_check' class='allcontent'>
         <el-row style='height:100%'>
             <el-col :span="4" class="tree_box" v-if="userType!=3">
                 <div>
@@ -26,7 +26,24 @@
           <el-col :span="userType==3&&24||20" style='height:100%'>
             <div class="top">
                 <div>
-                  &nbsp;部门/部位：<el-input v-model="department"></el-input>&nbsp;
+                  &nbsp;设备名称：<el-input v-model="department"></el-input>&nbsp;
+                 &nbsp;检查人 <el-select v-model="type" placeholder="请选择">
+                    <el-option
+                    v-for="item in typeList"
+                    :key="item.id"
+                    :label="item.text"
+                    :value="item.text">
+                    </el-option>
+                </el-select>
+                 &nbsp;检查项 <el-select v-model="type1" placeholder="请选择">
+                    <el-option
+                    v-for="item in typeList1"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                    </el-option>
+                </el-select>
+                 &nbsp;
                 时间筛选：<el-date-picker
                 v-model="startTime"
                 type="date"
@@ -41,6 +58,7 @@
                 placeholder="结束日期"
                 class="picker">
                 </el-date-picker>
+
                 <el-button type="primary" @click="seach"> 查询</el-button>
                 <el-button type="primary" @click="exportPolling">导出</el-button>
                 <el-button type="primary" @click="handleReset">重置</el-button>
@@ -52,73 +70,72 @@
             <el-table					
                 :data="tableData"
                 border
-                style="width: 150"
                 >
-                <el-table-column
-                prop="checkDepartment"
-                label="被检查部门或部位"
-                width="280">
+                 <el-table-column
+                    prop="updateTime"
+                    label="时间"
+                    align="center"
+                    width="160"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="name"
+                    label="设备名称"
+                    align="center"
+                    width="140"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="地址"
+                    align="center"
+                    width="160"
+                    >
+                 </el-table-column>
+               <el-table-column
+                :label="items.deviceTypeName"
+                align="center"
+                v-for="(items, indexs) in checkList" :key="indexs"
+                >
+                    <el-table-column
+                        :label="item.checkTypeName"
+                        align="center"
+                        width="90"
+                        v-for="(item, index) in items.checkTypeList" :key="index"
+                        >
+                            <template slot-scope="scope">
+                                <span >{{ scope.row.checkList[(indexs)*8+index].status }}</span>
+                            </template>
+                    </el-table-column>
+                
                 </el-table-column>
-                <el-table-column
-                prop="checkPerson"
-                label="参加检查人员"
-                width="320">
-                </el-table-column>
-                <el-table-column
-                prop="maintenanceType"
-                label="维保方式"
-                width="180">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.maintenanceType==1&&'自我维保'||'第三方维保' }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="提交时间"
-                width="220">
-                  <template slot-scope="scope">
-                    <span >{{ scope.row.date }}</span>
-                </template>
-                </el-table-column>
-                 <el-table-column label="详情">
+                 <el-table-column
+                    prop="uname"
+                    label="检查人"
+                    align="center"
+                    width="100"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="time"
+                    label="详情"
+                    align="center"
+                    >
                     <template slot-scope='scope'>
                         <el-button
                         size="mini"
                         type="primary"
-                        @click="editData(scope.row)">查看</el-button>
-                        <el-button
+                        @click="editData(scope.row.id)">查看</el-button>
                     </template>
-                </el-table-column>
-                
+                 </el-table-column>
             </el-table>
             <!-- 分页 -->
             <div style="position:absolute;bottom:0;" class="page">
                 <pagination :total='total' @pageChange="pageChange" ref="paginations"></pagination>
             </div>
             </div>
-
         </el-col>
         </el-row>
-         <el-dialog
-            width="475px"
-            title="巡检任务详情"
-            :visible.sync="pollingVisible1"
-            id="polling"
-            >
-                <div class="checkImage" v-if="maintenance.maintenanceImgUrl">
-                <div class="title1">
-                    维保照片
-                </div>
-                <div class="imageList">
-                    <el-image 
-                        style="width: 100px; height: 100px"
-                        v-for="(items, index) in maintenance.maintenanceImgUrl" :key="index"
-                        :src="items"
-                        class="img"
-                        :preview-src-list="maintenance.maintenanceImgUrl">
-                    </el-image>
-                </div>
-            </div>
-         </el-dialog>
          <el-dialog
             width="475px"
             title="巡检任务详情"
@@ -126,71 +143,21 @@
             id="polling"
             >
                 <div class="content">
-                     <div class="taskName">
-                        <div>被检查部门或部位</div>
-                        <div>{{pollingDetail.department}}</div>
-                    </div>
-                     <div class="taskName">
-                        <div>检查时间</div>
-                        <div>{{pollingDetail.endTimeValue|timeFormat}}</div>
-                    </div>
-                     <div class="taskName">
-                        <div>参加检查人员</div>
-                        <div>
-                            <span v-for="(item, index) in pollingDetail.checkPeople" :key="index">{{item}}、</span>
+                 <div>
+                    <div class="title">巡检记录</div>
+                    <div class="descript">
+                        <div class="title1">检查情况</div>
+                        <div class="textarea">
+                           {{pollingDetail.content}}
                         </div>
                     </div>
-                    <template v-for="(item, index) in pollingDetail.list" v-if="item.status==1">
-                        <div class="taskName">
-                            <div class="flex">
-                                 <div class="line"></div>
-                                <template v-if="item.type==0">火灾隐患整改及防范措施落实情况</template>
-                                <template v-if="item.type==1">安全疏散通道疏散标志、应急照明和安全出口情况</template>
-                                <template v-if="item.type==2">消防车道、消防水源情况</template>
-                                <template v-if="item.type==3">用火、用电有无违章情况</template>
-                                <template v-if="item.type==4">灭火器配置及有效情况</template>
-                                <template v-if="item.type==5">抽查重点工种人员以及其他员工消防知识掌握情况</template>
-                                <template v-if="item.type==6">消防安全重点部位管理情况</template>
-                                <template v-if="item.type==7">危险品和场所防火防爆落实情况以及重要物资防火安全情况</template>
-                                <template v-if="item.type==8">消控室值班和设施运行、记录情况（抽查系统）</template>
-                                <template v-if="item.type==9">防火巡查情况（查记录表、电脑等）</template>
-                                <template v-if="item.type==10">消防安全标志的设置情况和完好、有效情况</template>
-                                <template v-if="item.type==11">其他情况</template>
-                            </div>
+                    <div class="checkImage">
+                        <div class="title1">
+                            巡查照片
                         </div>
-                        <div class="taskName">
-                            <div>是否存在违章情况</div>
-                            <div>
-                                <el-radio-group v-model="item.status1">
-                                    <el-radio :label="1">是</el-radio>
-                                    <el-radio :label="2">否</el-radio>
-                                </el-radio-group>
-                            </div>
+                        <div class="imageList">
+                            <img  class="img" v-for="(items, index) in pollingDetail.checkImages" :key="index" :src="items" alt="">
                         </div>
-                        <div v-if="item.status1==1">
-                            <div class="title">巡检记录</div>
-                            <div class="descript">
-                                <div class="title1">检查情况</div>
-                                <div class="textarea">
-                                    {{item.content}}
-                                </div>
-                            </div>
-                            <div class="checkImage" v-if="item.checkImg.length">
-                                <div class="title1">
-                                    巡查照片
-                                </div>
-                                <div class="imageList">
-                                    <img  class="img" v-for="(items, index) in item.checkImg" :key="index" :src="items" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                 <div class="descript">
-                    <div class="flex">
-                        <div class="line"></div> 处理情况
-                    </div>
-                    <div class="textarea">
-                        {{pollingDetail.content}}
                     </div>
                 </div>
                 <div class="sign_head">
@@ -224,11 +191,6 @@ export default {
             tableData:[],//巡检记录
             startTime:'',
             endTime:'',
-            department:'',
-            pollingVisible:false,
-            pollingVisible1:false,
-            pollingDetail:{},
-            maintenance:{},
             expireTimeOptionStart: {
                 disabledDate: time => {
                     let beginDateVal = this.endTime;
@@ -243,97 +205,109 @@ export default {
             expireTimeOptionEnd: {
                 disabledDate: time => {
                     let beginDateVal = this.startTime;
-                    let curDate = new Date(beginDateVal).getTime()
-                    // let one = 365 * 24 * 3600 * 1000
-                    // let oneYear = curDate + one
                     if (beginDateVal) {
                         return (
-                            (time.getTime() < curDate )|| (time.getTime() > Date.now())
+                            (time.getTime() < new Date(beginDateVal).getTime()) || (time.getTime() > Date.now())
                         )
                     }
                         return time.getTime() > Date.now()
                 },
             },
+            type:'',
+            typeList:[
+            ],
+            type1:'',
+            typeList1:[
+                {
+                    id:0,
+                    name:"正常"
+                },
+                {
+                    id:1,
+                    name:'异常'
+                },
+            ],
+            department:'',
+            checkList:[],
+            pollingVisible:false,
+            pollingDetail:{}
        }
    },
  methods:{
-     editData(data){
-         this.axios({
-            url:"/api/admin/month/inspection/single",
-            method:"post",
-            data:{
-                id:data.id,
-                type:data.maintenanceType
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-                if(data.maintenanceType==1){
-                    this.pollingDetail = res.data.data
-                    this.pollingVisible = true
-                }else{
-                    this.maintenance = res.data.data
-                    this.pollingVisible1 = true
-                }
-            }else{
-                this.$alert(res.data.msg)
-            }
-        })
-     },
-    exportPolling(){
-        this.axios({
-            url:"/api/admin/month/inspection/info/excel",
-            method:"post",
-            data:{
-                startTime:this.startTime,
-                endTime:this.endTime,
-                unitId:this.unitId,
-                type:1
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-                if( res.data.data){
-                    location.href=res.data.data
-                }
-            }
-            if(res.data.msg){
+     exportPolling(){
 
-                this.$alert(res.data.msg)
-            }
-            
-        })
-    },
+     },
+     editData(id){
+         this.$post('/api/admin/device/inspection/single',{
+             id
+         }).then( res =>{
+             this.pollingVisible =true
+             this.pollingDetail = res.data
+         })
+     },
+     getTypeList(id){
+         this.$post('/api/admin/device/inspection/check/types',{
+         }).then( res =>{
+             this.typeList1 =res.data
+         })
+     },
     seach(){
         this.currentPage = 1
         this.getDatas()
     },
     getDatas () {
         this.axios({
-            url:"/api/admin/month/inspection/list",
+            url:"/api/admin/device/inspection/list",
             method:"post",
             data:{
                 startTime:this.startTime,
                 endTime:this.endTime,
+                // unitId:2511,
                 unitId:this.unitId,
                 pageSize:this.rows,
                 pageNum:this.currentPage,
-                uname:this.department,
+                uname:this.type,
+                checkTypeName:this.type1,
+                name:this.department
             }
         }).then( res =>{
             if( res.data.code ==0 ){
-                    this.tableData = res.data.data.list
-                    this.total = res.data.data.total
+                    this.tableData = res.data.data.startPage.list
+                    // this.tableData&&this.tableData.map( item =>{
+                    //     item.lastLoginTime = item.lastLoginTime&&item.lastLoginTime.slice(0,10)
+                    // })
+                    this.total = res.data.data.startPage.total
+                    this.checkList = res.data.data.deviceTypeList
             }else{
                 this.$alert(res.data.msg)
             }
         })
     },
-    getData(){
-         
+    getpeople(){
+        this.axios({
+            url:"/api/admin/user/fire/inspection/list",
+            method:"post",
+            data:{
+                id:this.unitId,
+            }
+        }).then( res =>{
+            if( res.data.code ==0 ){
+               this.typeList =res.data.data
+            }else{
+                this.$alert(res.data.msg)
+            }
+        })
     },
+     getData(){
+         
+     },
     handleReset () {//重置
+        //   Object.assign(this.$data.ruleForm,this.$options.data().ruleForm);
         this.startTime = ''
         this.endTime = ''
-        this.department = ''
+        this.type = ''
+        this.type1 = ''
+        this.department=""
         this.currentPage=1
         this.$refs.paginations.changePageNum(1)
         this.getDatas()
@@ -354,6 +328,8 @@ export default {
     handleNodeClick(data) { //点击树节点
         this.unitId = data.id
         this.getDatas()
+        this.getpeople()
+        this.getTypeList()
     },
 },
     mounted() {
@@ -361,6 +337,8 @@ export default {
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
             this.getDatas()
+            this.getpeople()
+            this.getTypeList()
         }
     },
 }
@@ -368,27 +346,15 @@ export default {
 
 <style lang="scss">
       
-    #fire_watch{
+    #spot_check{
+        .el-table{
+            border-bottom: 1px solid #EBEEF5;
+        }
         .el-table:before{
             width:0;
         }
-        .box-card{
-            margin-bottom: 20px;
-            .head{
-                font-size: 19px;
-            }
-            .content{
-                 margin-bottom: 10px;
-            }
-            .title{
-                margin-bottom: 10px;
-                font-size: 18px;
-            }
-            .tags{
-                margin-right: 10px;
-                margin-bottom: 10px;
-                cursor: pointer;
-            }
+        .el-table thead.is-group th{
+         background-color: #FFF;
         }
         .el-input{
             width:190px;
@@ -404,13 +370,13 @@ export default {
         }
         .page{
             .el-input{
-                width:120px;
+            width:120px;
             }
             .el-input__suffix{
                 top:-7px
             }
         }
-         #polling{
+        #polling{
             ul{
                 padding-inline-start: 0px;
             }

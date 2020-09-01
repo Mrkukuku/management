@@ -111,8 +111,8 @@
                             <el-form-item label="设备安装位置" prop="installAddres">
                                <el-input v-model="ruleForm.installAddres"></el-input>
                             </el-form-item>
-                            <el-form-item label="设备类型" prop="type">
-                               <el-select v-model="ruleForm.type" placeholder="请选择">
+                            <el-form-item label="设备类型" prop="deviceOptionLibId">
+                               <el-select v-model="ruleForm.deviceOptionLibId" placeholder="请选择">
                                 <el-option
                                     v-for="item in typeOptionsData1"
                                     :key="item.value"
@@ -212,7 +212,7 @@ export default {
                 name:'',//二维码名称
                 expireTime:'',
                 installAddres:"",
-                type:''
+                deviceOptionLibId:''
             },
             rules:{
                  name: [
@@ -221,7 +221,7 @@ export default {
                  installAddres: [
                     { required: true, message: '请输入设备安装位置', trigger: 'blur' },
                 ],
-                 type: [
+                 deviceOptionLibId: [
                     { required: true, message: '请选择设备类型', trigger: 'blur' },
                 ],
             },
@@ -261,6 +261,11 @@ export default {
         }
     },
     methods:{
+        getTypeList(){
+            this.$post('/api/admin/device/option/lib/list',{}).then( res =>{
+                this.typeOptionsData1 =res.data
+            })
+        },
         filterNode(value, data) {//树节点筛选
             if (!value) return true;
             return data.label.indexOf(value) !== -1;
@@ -492,6 +497,7 @@ export default {
         }else{
             this.getTreeData();
         }
+        this.getTypeList()
     },
     
 }

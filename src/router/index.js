@@ -145,6 +145,12 @@ export default new Router({
           meta:{keepAlive: false},
           component: () => import("@/components/unit_management/fireFacility.vue")
         },
+        {
+          path:"spotCheck",
+          name:"每月点检",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/spotCheck.vue")
+        },
       ]
     },
     {
