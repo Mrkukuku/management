@@ -813,7 +813,7 @@ export const Common={
             }).then(res=>{
                 if(res.data.code==0){
                     if(res.data.data){
-                        _this.Treedata=res.data.data;
+                        _this.Treedata= Object.freeze(res.data.data) 
                         if(_this.module=='unit'){
                             // _this.unitId=-1;
                             _this.unitid_flag=true;

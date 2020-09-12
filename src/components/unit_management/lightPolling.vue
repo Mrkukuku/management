@@ -1,6 +1,6 @@
 <template>
 <!-- 巡检任务 -->
-    <div id='connect_list' class='allcontent'>
+    <div id='spot_check' class='allcontent'>
         <el-row style='height:100%'>
             <el-col :span="4" class="tree_box" v-if="userType!=3">
                 <div>
@@ -26,21 +26,12 @@
           <el-col :span="userType==3&&24||20" style='height:100%'>
             <div class="top">
                 <div>
-              
-                 &nbsp;人员 <el-select v-model="type" placeholder="请选择">
+                 &nbsp;检查人: <el-select v-model="type" placeholder="请选择">
                     <el-option
                     v-for="item in typeList"
                     :key="item.id"
                     :label="item.text"
-                    :value="item.id">
-                    </el-option>
-                </el-select>
-                 &nbsp;异常情况 <el-select v-model="type1" placeholder="请选择">
-                    <el-option
-                    v-for="item in typeList1"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
+                    :value="item.text">
                     </el-option>
                 </el-select>
                  &nbsp;
@@ -48,6 +39,7 @@
                 v-model="startTime"
                 type="date"
                 placeholder="开始日期"
+                 value-format="yyyy-MM-dd"
                 :picker-options="expireTimeOptionStart"
                 class="picker">
                 </el-date-picker> -
@@ -56,6 +48,7 @@
                 type="date"
                 :picker-options="expireTimeOptionEnd"
                 placeholder="结束日期"
+                 value-format="yyyy-MM-dd"
                 class="picker">
                 </el-date-picker>
 
@@ -70,98 +63,60 @@
             <el-table					
                 :data="tableData"
                 border
-                style="width: 150"
                 >
-                <el-table-column
-                prop="uname"
-                label="值班人"
-                width="120">
-                </el-table-column>
-                <el-table-column
-                prop="nextHandUname"
-                label="交接人"
-                width="120">
-                </el-table-column>
-                <el-table-column
-                prop="lastHandUname"
-                label="接班人"
-                width="120">
-                </el-table-column>
-                <el-table-column
-                label="值班开始时间"
-                width="160">
-                  <template slot-scope="scope">
-                    <span >{{ scope.row.watchStartTime|timeFormat }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="值班结束时间"
-                width="160">
-                  <template slot-scope="scope">
-                    <span > {{ scope.row.watchEndTime|timeFormat }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="消防设施运行情况"
-                width="140">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.checkList[0].status==1&&'正常'||scope.row.checkList[0].content&&scope.row.checkList[0].content||'异常' }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="监控录像运行情况"
-                width="140">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.checkList[1].status==1&&'正常'||scope.row.checkList[1].content&&scope.row.checkList[1].content||'异常' }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="设备故障及排除情况"
-                width="150">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.checkList[2].status==1&&'正常'||scope.row.checkList[2].content&&scope.row.checkList[2].content||'异常' }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="其他情况"
-                width="140">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.checkList[3].status==1&&'正常'||scope.row.checkList[3].content&&scope.row.checkList[3].content||'异常' }}</span>
-                </template>
-                </el-table-column>
-                <el-table-column
-                label="对讲机(台)"
-                width="100">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.deviceList[0].num }}</span>
-                 </template>
-                </el-table-column>
-                <el-table-column
-                label="钥匙(把)"
-                width="100">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.deviceList[1].num }}</span>
-                 </template>
-                </el-table-column>
-                <el-table-column
-                label="空气呼吸器(套)"
-                width="120">
-                 <template slot-scope="scope">
-                    <span >{{ scope.row.deviceList[2].num }}</span>
-                 </template>
-                </el-table-column>
-                <el-table-column
-                prop="otherArticle"
-                label="其他物品"
-                width="100">
-                </el-table-column>
+                 <el-table-column
+                    prop="updateTime"
+                    label="日期"
+                    align="center"
+                    width="160"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="name"
+                    label="总数量"
+                    align="center"
+                    width="140"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="异常数"
+                    align="center"
+                    width="160"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="正常数"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="uname"
+                    label="检查人"
+                    align="center"
+                    width="100"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="time"
+                    label="详情"
+                    align="center"
+                    >
+                    <template slot-scope='scope'>
+                        <el-button
+                        size="mini"
+                        type="primary"
+                        @click="editData(scope.row.id)">查看</el-button>
+                    </template>
+                 </el-table-column>
             </el-table>
             <!-- 分页 -->
             <div style="position:absolute;bottom:0;" class="page">
                 <pagination :total='total' @pageChange="pageChange" ref="paginations"></pagination>
             </div>
             </div>
-
         </el-col>
         </el-row>
 </div>
@@ -183,7 +138,7 @@ export default {
             unitId:'',//单位id
             currentPage:1,
             rows:10,
-            total:100,
+            total:0,
             tableData:[],//巡检记录
             startTime:'',
             endTime:'',
@@ -209,58 +164,46 @@ export default {
                         return time.getTime() > Date.now()
                 },
             },
-            type:'',//日检
+            type:'',
             typeList:[
-                {
-                    id:1,
-                    name:"是"
-                },
-                {
-                    id:0,
-                    name:'否'
-                }
             ],
-            type1:'',//消控值班
+            type1:'',
             typeList1:[
                 {
+                    id:0,
+                    name:"正常"
+                },
+                {
                     id:1,
-                    name:"消防设施运行情况"
-                },
-                {
-                    id:2,
-                    name:'监控录像运行情况'
-                },
-                {
-                    id:3,
-                    name:'设备故障及排除情况'
-                },
-                {
-                    id:4,
-                    name:'其他情况'
+                    name:'异常'
                 },
             ],
-          
+            department:'',
+            checkList:[],
+            pollingVisible:false,
+            pollingDetail:{}
        }
    },
  methods:{
      exportPolling(){
-          this.axios({
-            url:"/api/admin/fire/control/handover/info/excel",
-            method:"post",
-            data:{
-                startTime:this.startTime,
+         this.$post('/api/admin/device/inspection/info/excel',{
+               startTime:this.startTime,
                 endTime:this.endTime,
+                // unitId:2511,
                 unitId:this.unitId,
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-                if( res.data.data){
-                    location.href = res.data.data
-                }
-            }
-                if( res.data.msg)this.$alert(res.data.msg)
-            
-        })
+         }).then( res =>{
+             if( res.data ){
+                 location.href=res.data
+             }
+         })
+     },
+     editData(id){
+         this.$post('/api/admin/device/inspection/single',{
+             id
+         }).then( res =>{
+             this.pollingVisible = true
+             this.pollingDetail = res.data
+         })
      },
     seach(){
         this.currentPage = 1
@@ -268,41 +211,26 @@ export default {
     },
     getDatas () {
         this.axios({
-            url:"/api/admin/fire/control/handover/list",
+            url:"/api/admin/device/inspection/list",
             method:"post",
             data:{
                 startTime:this.startTime,
                 endTime:this.endTime,
+                // unitId:2511,
                 unitId:this.unitId,
-                pageSize:this.rows,
+                pageSize:this.rows,          
                 pageNum:this.currentPage,
-                uid:this.type,
-                exceptionType:this.type1,
+                uname:this.type,
+                checkTypeName:this.type1,
+                name:this.department
             }
         }).then( res =>{
             if( res.data.code ==0 ){
-                    this.tableData = res.data.list
-                    // this.tableData&&this.tableData.map( item =>{
-                    //     item.lastLoginTime = item.lastLoginTime&&item.lastLoginTime.slice(0,10)
-                    // })
-                    this.total = res.data.total
+                    this.tableData = res.data.data.startPage.list
+                    this.total = res.data.data.startPage.total
+                    this.checkList = res.data.data.deviceTypeList
             }else{
-                this.$alert(res.data.msg)
-            }
-        })
-    },
-    getpeople(){
-        this.axios({
-            url:"/api/admin/user/fire/control/list",
-            method:"post",
-            data:{
-                id:this.unitId,
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-               this.typeList =res.data.data
-            }else{
-                this.$alert(res.data.msg)
+                    this.$alert(res.data.msg)
             }
         })
     },
@@ -315,6 +243,7 @@ export default {
         this.endTime = ''
         this.type = ''
         this.type1 = ''
+        this.department=""
         this.currentPage=1
         this.$refs.paginations.changePageNum(1)
         this.getDatas()
@@ -335,15 +264,13 @@ export default {
     handleNodeClick(data) { //点击树节点
         this.unitId = data.id
         this.getDatas()
-        this.getpeople()
     },
 },
     mounted() {
         this.userType = sessionStorage.getItem('userTypes')
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
-            this.getDatas()
-            this.getpeople()
+            // this.getDatas()
         }
     },
 }
@@ -351,12 +278,15 @@ export default {
 
 <style lang="scss">
       
-    #connect_list{
-         .el-table{
+    #spot_check{
+        .el-table{
             border-bottom: 1px solid #EBEEF5;
         }
         .el-table:before{
             width:0;
+        }
+        .el-table thead.is-group th{
+         background-color: #FFF;
         }
         .el-input{
             width:190px;
@@ -378,5 +308,6 @@ export default {
                 top:-7px
             }
         }
+       
     }
 </style>

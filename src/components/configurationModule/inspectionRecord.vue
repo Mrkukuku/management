@@ -310,6 +310,9 @@ export default {
 
 <style lang="scss" >
     #inspection_record{
+         .el-table{
+            border-bottom: 1px solid #EBEEF5;
+        }
         .el-table:before{
             width:0;
         }

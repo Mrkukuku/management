@@ -9,34 +9,37 @@
                     <template slot="title">单位日常管理</template>
                     <el-menu-item-group>
                         <el-menu-item index="1-1"><router-link to="/unitmanagement/userManagement">人员信息</router-link></el-menu-item>
-                        <el-menu-item index="1-2"><router-link to="/unitmanagement/networkUnitManagement">联网单位</router-link></el-menu-item>
+                        <!-- <el-menu-item index="1-2"><router-link to="/unitmanagement/networkUnitManagement">联网单位</router-link></el-menu-item>
                         <el-menu-item index="1-3"><router-link to="/unitmanagement/buildingAreaManagement">建筑物区域</router-link></el-menu-item>
                         <el-menu-item index="1-4"><router-link to="/unitmanagement/miniStationManagement">微型站</router-link></el-menu-item>
                         <el-menu-item index="1-5"><router-link to="/unitmanagement/PollingTask">巡检任务</router-link></el-menu-item>
                         <el-menu-item index="1-6"><router-link to="/unitmanagement/drillTaskmanagement">演练任务</router-link></el-menu-item>
                         <el-menu-item index="1-7"><router-link to="/unitmanagement/MaintenancePlan">维修计划</router-link></el-menu-item>
                         <el-menu-item index="1-8"><router-link to="/unitmanagement/noticeManagement">公告发布</router-link></el-menu-item>
-                        <el-menu-item index="1-9"><router-link to="/unitmanagement/trainingTask">培训任务</router-link></el-menu-item>
+                        <el-menu-item index="1-9"><router-link to="/unitmanagement/trainingTask">培训任务</router-link></el-menu-item> -->
                         <el-menu-item index="1-10"><router-link to="/configurationModule/inspectionRecord">巡检记录</router-link></el-menu-item>
-                        <template v-if="userType==2">
+                        <!-- <template v-if="userType==2">
                           <el-menu-item index="1-11"><router-link to="/unitmanagement/complaintsReportList">投诉管理</router-link></el-menu-item>
-                        </template>
+                        </template> -->
                         <el-menu-item index="1-12"><router-link to="/unitmanagement/everydayRecord">每日一查</router-link></el-menu-item>
                         <!-- <el-menu-item index="1-13"><router-link to="/unitmanagement/ErPollingTask">二维码巡检</router-link></el-menu-item> -->
-                        <el-menu-item index="1-13"><router-link to="/unitmanagement/connectList">消控交接记录</router-link></el-menu-item>
-                        <el-menu-item index="1-14"><router-link to="/unitmanagement/fireWatch">每月防火检查</router-link></el-menu-item>
-                        <el-menu-item index="1-15"><router-link to="/unitmanagement/fireFacility">消防设施维修记录</router-link></el-menu-item>
                         <el-menu-item index="1-16"><router-link to="/unitmanagement/spotCheck">每月点检</router-link></el-menu-item>
+                        <el-menu-item index="1-14"><router-link to="/unitmanagement/fireWatch">每月防火检查</router-link></el-menu-item>
+                        <el-menu-item index="1-13"><router-link to="/unitmanagement/connectList">消控交接记录</router-link></el-menu-item>
+                        <el-menu-item index="1-15"><router-link to="/unitmanagement/fireFacility">消防设施维修记录</router-link></el-menu-item>
+                        <el-menu-item index="1-17"><router-link to="/unitmanagement/pumpHouse">消防水泵房记录</router-link></el-menu-item>
+                        <el-menu-item index="1-18"><router-link to="/unitmanagement/lightPolling">疏散/照明灯月检</router-link></el-menu-item>
+                        <el-menu-item index="3-7"><router-link to="/configurationModule/qrCode">设备二维码</router-link></el-menu-item>
                     </el-menu-item-group>
                   </el-submenu>
-                  <el-submenu index="2">
+                  <!-- <el-submenu index="2">
                     <template slot="title">单位物联设施</template>
                     <el-menu-item-group>
                         <el-menu-item index="2-1"><router-link to="/facilityFacilities/equipmentLibrary">设备库</router-link></el-menu-item>
                         <el-menu-item index="2-2"><router-link to="/facilityFacilities/deviceManagement">设备管理</router-link></el-menu-item>
                     </el-menu-item-group>
-                  </el-submenu>
-                  <el-submenu index="3">
+                  </el-submenu> -->
+                  <!-- <el-submenu index="3">
                     <template slot="title">单位基础配置</template>
                     <el-menu-item-group>
                       <el-menu-item index="3-1"><router-link to="/configurationModule/importantAlarm">重要报警类型弹框</router-link></el-menu-item>
@@ -45,7 +48,6 @@
                         <el-menu-item index="3-4"><router-link to="/configurationModule/audioconfig">报警声音设置</router-link></el-menu-item>
                         <el-menu-item index="3-5"><router-link to="/configurationModule/installationInformation">设备安装信息</router-link></el-menu-item>
                         <el-menu-item index="3-6"><router-link to="/configurationModule/unitScore">单位评分标准</router-link></el-menu-item>
-                        <el-menu-item index="3-7"><router-link to="/configurationModule/qrCode">设备二维码</router-link></el-menu-item>
                         <el-menu-item index="3-8"><router-link to="/configurationModule/accountabilitySystem">履责制度</router-link></el-menu-item>
                         <template v-if="userType==1">
                             <el-menu-item index="3-9"><router-link to="/configurationModule/AreaModuleConfiguration">综合区域模块</router-link></el-menu-item>
@@ -55,12 +57,9 @@
                             <el-menu-item index="3-11"><router-link to="/configurationModule/unitAreaModule">区域模块</router-link></el-menu-item>
                         </template>
                         <el-menu-item index="3-12"><router-link to="/configurationModule/logManagement">日志</router-link></el-menu-item>
-                        <!-- <template v-if="userType!=3"> -->
                           <el-menu-item index="3-13"><router-link to="/configurationModule/SMSPhoneStatistics">短信电话统计设置模块</router-link></el-menu-item>
-                        <!-- </template> -->
                           <el-menu-item index="3-14"><router-link to="/configurationModule/pollingTaskConfig">巡检任务设置</router-link></el-menu-item>
                     </el-menu-item-group>
-
                   </el-submenu>
                   <el-submenu index="4">
                     <template slot="title">资料管理</template>
@@ -71,8 +70,8 @@
                           <el-menu-item index="4-3"><router-link to="/databaseManagement/maintenanceLibrary">维保库</router-link></el-menu-item>
                         </template>
                     </el-menu-item-group>
-                  </el-submenu>
-                  <el-submenu index="5">
+                  </el-submenu> -->
+                  <!-- <el-submenu index="5">
                     <template slot="title">消防内部数据</template>
                     <el-menu-item-group>
                         <el-menu-item index="5-5"><router-link to="/internalData/FireData">火警数据</router-link></el-menu-item>
@@ -83,14 +82,12 @@
                         <el-menu-item index="5-2"><router-link to="/internalData/fireSupervision">消防监督检查数据</router-link></el-menu-item>
                         <el-menu-item index="5-3"><router-link to="/internalData/officeStaff">办公机构人员数据</router-link></el-menu-item>
                     </el-menu-item-group>
-                  </el-submenu>
-
+                  </el-submenu> -->
                    <!-- <el-submenu index="6">
                     <template slot="title">技术服务管理</template>
                     <el-menu-item-group>
                         <el-menu-item index="6-1"><router-link to="/technicalService/contract">合同管理</router-link></el-menu-item>
                         <el-menu-item index="6-2"><router-link to="/technicalService/servicePlan">服务计划</router-link></el-menu-item>
-
                     </el-menu-item-group>
                   </el-submenu> -->
               </el-menu>

@@ -20,7 +20,7 @@
                 </el-tree>
             </div>
         </el-col>
-        <el-col :span="20" style="height:100%;padding-left:10px;">
+        <el-col :span="userType==3&&24||20" style="height:100%;padding-left:10px;">
             <!-- 头部 -->
             <div class="top">
                 二维码名称:<el-input v-model="areaName" placeholder="搜索名称"></el-input>&nbsp;&nbsp;
@@ -55,6 +55,11 @@
                     width="240">
                     </el-table-column>
                     <el-table-column
+                    prop="deviceTypeName"
+                    label="类型"
+                    width="130">
+                    </el-table-column>
+                    <el-table-column
                     prop="expireTime"
                     label="二维码有效期"
                     width="300">
@@ -82,7 +87,7 @@
                             </el-button>
                         </template>
                         <div id="erwei" style="display:none">
-                            <div style="display: flex;flex-direction: column;align-items: center;height:520px" v-for="(item, index) in qrList" :key="index">
+                            <div style="display: flex;flex-direction: column;align-items: center;height:138.5mm" v-for="(item, index) in qrList" :key="index">
                                 <img :src="item.img" alt="二维码">
                                 <div>
                                      <div style="font-size:20px">设备名称：{{item.name}}</div>
@@ -367,7 +372,7 @@ export default {
                 }
             }).then(res=>{
                 if(res.data.code==0){
-                    _this.tableData=res.data.list;
+                    _this.tableData= Object.freeze(res.data.list);
                     for(var i in _this.tableData){
                         if(_this.tableData[i].expireTime==null){
                             _this.tableData[i].expireTime="永久";
@@ -422,10 +427,10 @@ export default {
             const left = ((width / 2) - (w / 2)) + dualScreenLeft;
             const top = ((height / 2) - (h / 2)) + dualScreenTop;
             var myWindow = window.open("", "打印", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=" + w + ", height=" + h + ", top=" + top + ", left=" + left);
-            var style = "<style type='text/css'>table.gridtable {font-family: verdana,arial,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #666666;border-collapse: collapse;}table.gridtable th {border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;}table.gridtable td {border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;}</style>";
+            var style = "<style type='text/css'>@page{ margin: 10mm;}; html,body{margin:0;padding:0}; table.gridtable {font-family: verdana,arial,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #666666;border-collapse: collapse;}table.gridtable th {border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;}table.gridtable td {border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;}</style>";
             myWindow.document.write(content + style);
             myWindow.focus();
-            myWindow.document.close();     //关闭document的输出流, 显示选定的数据
+            myWindow.document.close();//关闭document的输出流, 显示选定的数据
             myWindow.print();   //打印当前窗口
             return myWindow;
         },
@@ -455,7 +460,7 @@ export default {
         },
         allPrint() {//批量打印
             var that = this
-            if( this.allSelectList.length ){
+            if( this.allSelectList.length && this.allSelectList.length<=100){
                 this.axios({
                     url:"/api/admin/device/qr/batch/print",
                     method:"post",
@@ -464,7 +469,7 @@ export default {
                     }
                 }).then( res => {
                     if( res.data.code == 0 ){
-                        this.qrList = res.data.data
+                        this.qrList = Object.freeze(res.data.data) 
                         this.$nextTick( ()=> {
                             setTimeout( () => {
                                 var windows = that.print(document.getElementById('erwei').innerHTML,800,600);
@@ -476,6 +481,10 @@ export default {
                         });
                     }
                 })
+            }else if (  this.allSelectList.length>100){
+                this.$alert("最多打印100张", '提示', {
+                    confirmButtonText: 'OK',
+                });
             }else{
                 this.$alert("请选择二维码", '提示', {
                     confirmButtonText: 'OK',
@@ -499,12 +508,14 @@ export default {
         }
         this.getTypeList()
     },
-    
 }
 </script>
 
 <style lang="scss">
     .QRCode{
+         .el-table{
+            border-bottom: 1px solid #EBEEF5;
+        }
         .top{
             .el-input{
                 width: 180px;

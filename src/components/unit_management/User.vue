@@ -987,6 +987,9 @@ export default {
 </script>
 <style lang="scss">
     #usermanagement{
+         .el-table{
+            border-bottom: 1px solid #EBEEF5;
+        }
         .top{
             .el-input{
                 width:180px;
@@ -994,14 +997,10 @@ export default {
                     height:32px;
                 }
             }
-           
         }
         .el-date-range-picker__editor{
             width:140px;
         }
-        // .dialog{
-            
-        // }
         .el-dialog__body ul{
             background-color:#ffffff!important;
         }

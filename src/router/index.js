@@ -151,6 +151,24 @@ export default new Router({
           meta:{keepAlive: false},
           component: () => import("@/components/unit_management/spotCheck.vue")
         },
+        {
+          path:"pumpHouse",
+          name:"消防水泵房记录",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/pumpHouse.vue")
+        },
+        {
+          path:"lightPolling",
+          name:"应急灯/疏散指示灯检查",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/lightPolling.vue")
+        },
+        {
+          path:"ligthSpot",
+          name:"应急灯/疏散指示灯点检表",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/ligthSpot.vue")
+        },
       ]
     },
     {

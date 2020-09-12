@@ -1162,6 +1162,9 @@ export default {
         .el-table:before{
             width:0;
         }
+         .el-table{
+            border-bottom: 1px solid #EBEEF5;
+        }
         .box-card{
             margin-bottom: 20px;
             .head{

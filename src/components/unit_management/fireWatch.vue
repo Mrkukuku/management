@@ -102,7 +102,7 @@
             width="475px"
             title="巡检任务详情"
             :visible.sync="pollingVisible1"
-            id="polling"
+            id="pollings"
             >
                 <div class="checkImage" v-if="maintenance.maintenanceImgUrl">
                 <div class="title1">
@@ -369,6 +369,9 @@ export default {
 <style lang="scss">
       
     #fire_watch{
+         .el-table{
+            border-bottom: 1px solid #EBEEF5;
+        }
         .el-table:before{
             width:0;
         }
@@ -410,7 +413,7 @@ export default {
                 top:-7px
             }
         }
-         #polling{
+         #pollings{
             ul{
                 padding-inline-start: 0px;
             }

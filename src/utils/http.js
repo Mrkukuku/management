@@ -2,6 +2,7 @@ import axios from 'axios'
 import router from '../router'
 import {MessageBox} from 'element-ui'
 // axios.defaults.baseURL = "https://admin.dingrennet.cn"; 
+axios.defaults.baseURL = "http://47.99.156.10:2009"; 
 axios.interceptors.request.use(
     config => {
       if (config.url === '/') {

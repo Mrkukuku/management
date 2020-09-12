@@ -26,7 +26,7 @@
           <el-col :span="userType==3&&24||20" style='height:100%'>
             <div class="top">
                 <div>
-                  &nbsp;设备名称：<el-input v-model="department"></el-input>&nbsp;
+                  <!-- &nbsp;设备名称：<el-input v-model="department"></el-input>&nbsp;
                  &nbsp;检查人: <el-select v-model="type" placeholder="请选择">
                     <el-option
                     v-for="item in typeList"
@@ -42,7 +42,7 @@
                     :label="item.name"
                     :value="item.name">
                     </el-option>
-                </el-select>
+                </el-select> -->
                  &nbsp;
                 时间筛选：<el-date-picker
                 v-model="startTime"
@@ -75,7 +75,7 @@
                 >
                  <el-table-column
                     prop="updateTime"
-                    label="时间"
+                    label="日期"
                     align="center"
                     width="160"
                     >
@@ -89,27 +89,67 @@
                  </el-table-column>
                  <el-table-column
                     prop="address"
-                    label="地址"
+                    label="设备地址"
                     align="center"
                     width="160"
                     >
                  </el-table-column>
-               <el-table-column
-                :label="items.deviceTypeName"
-                align="center"
-                v-for="(items, indexs) in checkList" :key="indexs"
-                >
-                    <el-table-column
-                        :label="item.checkTypeName"
-                        align="center"
-                        width="90"
-                        v-for="(item, index) in items.checkTypeList" :key="index"
-                        >
-                            <template slot-scope="scope">
-                                <span >{{ scope.row.checkList[(indexs)*8+index].status }}</span>
-                            </template>
-                    </el-table-column>
-                </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="泵"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="泵"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="控制柜"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="管网"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="消防电话"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="泵房环境"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="水箱"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
+                 <el-table-column
+                    prop="address"
+                    label="水力警铃"
+                    align="center"
+                    width="90"
+                    >
+                 </el-table-column>
                  <el-table-column
                     prop="uname"
                     label="检查人"
@@ -255,12 +295,6 @@ export default {
              this.pollingDetail = res.data
          })
      },
-     getTypeList(id){
-         this.$post('/api/admin/device/inspection/check/types',{
-         }).then( res =>{
-             this.typeList1 = res.data
-         })
-     },
     seach(){
         this.currentPage = 1
         this.getDatas()
@@ -285,21 +319,6 @@ export default {
                     this.tableData = res.data.data.startPage.list
                     this.total = res.data.data.startPage.total
                     this.checkList = res.data.data.deviceTypeList
-            }else{
-                this.$alert(res.data.msg)
-            }
-        })
-    },
-    getpeople(){
-        this.axios({
-            url:"/api/admin/user/fire/inspection/list",
-            method:"post",
-            data:{
-                id:this.unitId,
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-               this.typeList =res.data.data
             }else{
                 this.$alert(res.data.msg)
             }
@@ -335,17 +354,13 @@ export default {
     handleNodeClick(data) { //点击树节点
         this.unitId = data.id
         this.getDatas()
-        this.getpeople()
-        this.getTypeList()
     },
 },
     mounted() {
         this.userType = sessionStorage.getItem('userTypes')
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
-            this.getDatas()
-            this.getpeople()
-            this.getTypeList()
+            // this.getDatas()
         }
     },
 }
