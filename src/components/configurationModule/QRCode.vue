@@ -25,13 +25,13 @@
             <div class="top">
                 二维码名称:<el-input v-model="areaName" placeholder="搜索名称"></el-input>&nbsp;&nbsp;
                 类型:<el-select v-model="type" placeholder="请选择">
-                            <el-option
-                                v-for="item in typeOptionsData"
-                                :key="item.value"
-                                :label="item.name"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-option
+                            v-for="item in typeOptionsData"
+                            :key="item.value"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                 <el-button type="primary" @click='searchData'>查询</el-button>
                 <el-button @click='searchreset'>重置</el-button>
                 <el-button type="primary" @click="openAddBox" :disabled="addAreaFlag">新增二维码</el-button>
@@ -449,6 +449,7 @@ export default {
             this.getData() //改变页码，重新渲染页面
         },
         allSelectionChange(val){
+
         },
         handleSelectionChange (val) {//选择id
             var arr = []
@@ -481,7 +482,7 @@ export default {
                         });
                     }
                 })
-            }else if (  this.allSelectList.length>100){
+            }else if (  this.allSelectList.length>100 ){
                 this.$alert("最多打印100张", '提示', {
                     confirmButtonText: 'OK',
                 });

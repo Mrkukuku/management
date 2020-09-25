@@ -74,7 +74,7 @@
                 >
                  <el-table-column
                     prop="updateTime"
-                    label="时间"
+                    label="日期"
                     align="center"
                     width="160"
                     >
@@ -101,7 +101,7 @@
                     <el-table-column
                         :label="item.checkTypeName"
                         align="center"
-                        width="90"
+                        width="120"
                         v-for="(item, index) in items.checkTypeList" :key="index"
                         >
                             <template slot-scope="scope">
@@ -111,7 +111,7 @@
                 </el-table-column>
                  <el-table-column
                     prop="uname"
-                    label="检查人"
+                    label="巡逻人签字"
                     align="center"
                     width="100"
                     >
@@ -239,7 +239,7 @@ export default {
                startTime:this.startTime,
                 endTime:this.endTime,
                 unitId:this.unitId,
-                type:1,
+                type:2,
                 isExpires:0
          }).then( res =>{
              if( res.data ){
@@ -279,7 +279,7 @@ export default {
                 uname:this.type,
                 checkTypeName:this.type1,
                 name:this.department,
-                type:1,
+                type:2,
                 isExpires:0
             }
         }).then( res =>{

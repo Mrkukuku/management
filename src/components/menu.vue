@@ -22,6 +22,7 @@
                           <el-menu-item index="1-11"><router-link to="/unitmanagement/complaintsReportList">投诉管理</router-link></el-menu-item>
                         </template> -->
                         <el-menu-item index="1-12"><router-link to="/unitmanagement/everydayRecord">每日一查</router-link></el-menu-item>
+                        <el-menu-item index="1-19"><router-link to="/unitmanagement/everydatPatrol">每日巡逻</router-link></el-menu-item>
                         <!-- <el-menu-item index="1-13"><router-link to="/unitmanagement/ErPollingTask">二维码巡检</router-link></el-menu-item> -->
                         <el-menu-item index="1-16"><router-link to="/unitmanagement/spotCheck">每月点检</router-link></el-menu-item>
                         <el-menu-item index="1-14"><router-link to="/unitmanagement/fireWatch">每月防火检查</router-link></el-menu-item>
@@ -354,6 +355,7 @@
         tabClick(){
           this.$router.push({path: this.activeIndex});//点击跳转到页面
           this.$store.commit('routeJump/delete_tabs', '/unitmanagement/PollingSummary');
+           this.$store.commit('routeJump/delete_tabs', '/unitmanagement/ligthSpot');
         },
         //移除tab标签
         tabRemove(targetName){

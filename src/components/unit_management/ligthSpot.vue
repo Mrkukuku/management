@@ -26,6 +26,12 @@
                     width="140">
                     </el-table-column>
                     <el-table-column
+                    prop="updatedTime"
+                    label="点检时间"
+                    align="center"
+                    width="140">
+                    </el-table-column>
+                    <el-table-column
                      label="点检项目"
                      align="center"
                      >
@@ -100,8 +106,7 @@
                      <el-table-column
                         prop="time"
                         align="center"
-                        label="备注"
-                        >
+                        label="备注">
                     </el-table-column>
                 </el-table>
              
@@ -217,6 +222,7 @@ export default {
         },
         goBack(){
             this.$router.push({path: '/unitmanagement/lightPolling'});
+            this.$store.commit('routeJump/delete_tabs', '/unitmanagement/ligthSpot');
         }
     },
     mounted(){

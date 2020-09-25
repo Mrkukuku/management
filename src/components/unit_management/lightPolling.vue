@@ -198,12 +198,17 @@ export default {
          })
      },
      editData(id){
-         this.$post('/api/admin/device/inspection/single',{
-             id
-         }).then( res =>{
-             this.pollingVisible = true
-             this.pollingDetail = res.data
-         })
+         let _this = this
+        //  this.$post('/api/admin/device/inspection/single',{
+        //      id
+        //  }).then( res =>{
+        //      this.pollingVisible = true
+        //      this.pollingDetail = res.data
+        //  })
+         this.$router.push({path:'/unitmanagement/ligthSpot',query:{
+            startTime:_this.startTime,
+            endTime:_this.endTime,
+         }})
      },
     seach(){
         this.currentPage = 1

@@ -413,7 +413,7 @@ export default {
                 top:-7px
             }
         }
-         #pollings{
+         #pollings,#polling{
             ul{
                 padding-inline-start: 0px;
             }

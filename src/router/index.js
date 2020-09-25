@@ -169,6 +169,12 @@ export default new Router({
           meta:{keepAlive: false},
           component: () => import("@/components/unit_management/ligthSpot.vue")
         },
+        {
+          path:"everydatPatrol",
+          name:"每日巡逻",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/everydatPatrol.vue")
+        },
       ]
     },
     {

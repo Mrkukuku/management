@@ -26,7 +26,6 @@
           <el-col :span="userType==3&&24||20" style='height:100%'>
             <div class="top">
                 <div>
-              
                  &nbsp;人员 <el-select v-model="type" placeholder="请选择">
                     <el-option
                     v-for="item in typeList"
@@ -161,7 +160,6 @@
                 <pagination :total='total' @pageChange="pageChange" ref="paginations"></pagination>
             </div>
             </div>
-
         </el-col>
         </el-row>
 </div>
@@ -281,11 +279,8 @@ export default {
             }
         }).then( res =>{
             if( res.data.code ==0 ){
-                    this.tableData = res.data.list
-                    // this.tableData&&this.tableData.map( item =>{
-                    //     item.lastLoginTime = item.lastLoginTime&&item.lastLoginTime.slice(0,10)
-                    // })
-                    this.total = res.data.total
+                this.tableData = res.data.list
+                this.total = res.data.total
             }else{
                 this.$alert(res.data.msg)
             }
@@ -310,7 +305,6 @@ export default {
          
      },
     handleReset () {//重置
-        //   Object.assign(this.$data.ruleForm,this.$options.data().ruleForm);
         this.startTime = ''
         this.endTime = ''
         this.type = ''
