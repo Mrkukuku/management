@@ -213,31 +213,32 @@ export default {
     seach(){
         this.currentPage = 1
         this.getDatas()
+         this.$refs.paginations.changePageNum(1)
     },
     getDatas () {
-        this.axios({
-            url:"/api/admin/device/inspection/list",
-            method:"post",
-            data:{
-                startTime:this.startTime,
-                endTime:this.endTime,
-                // unitId:2511,
-                unitId:this.unitId,
-                pageSize:this.rows,          
-                pageNum:this.currentPage,
-                uname:this.type,
-                checkTypeName:this.type1,
-                name:this.department
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-                    this.tableData = res.data.data.startPage.list
-                    this.total = res.data.data.startPage.total
-                    this.checkList = res.data.data.deviceTypeList
-            }else{
-                    this.$alert(res.data.msg)
-            }
-        })
+        // this.axios({
+        //     url:"/api/admin/device/inspection/list",
+        //     method:"post",
+        //     data:{
+        //         startTime:this.startTime,
+        //         endTime:this.endTime,
+        //         // unitId:2511,
+        //         unitId:this.unitId,
+        //         pageSize:this.rows,          
+        //         pageNum:this.currentPage,
+        //         uname:this.type,
+        //         checkTypeName:this.type1,
+        //         name:this.department
+        //     }
+        // }).then( res =>{
+        //     if( res.data.code ==0 ){
+        //             this.tableData = res.data.data.startPage.list
+        //             this.total = res.data.data.startPage.total
+        //             this.checkList = res.data.data.deviceTypeList
+        //     }else{
+        //             this.$alert(res.data.msg)
+        //     }
+        // })
     },
      getData(){
          
@@ -275,7 +276,7 @@ export default {
         this.userType = sessionStorage.getItem('userTypes')
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
-            // this.getDatas()
+            this.getDatas()
         }
     },
 }

@@ -105,7 +105,7 @@
                         v-for="(item, index) in items.checkTypeList" :key="index"
                         >
                             <template slot-scope="scope">
-                                <span >{{ scope.row.checkList[(indexs)*8+index].status }}</span>
+                                <span >{{ scope.row.checkList[(indexs)*8+index]&&scope.row.checkList[(indexs)*8+index].status }}</span>
                             </template>
                     </el-table-column>
                 </el-table-column>

@@ -74,17 +74,17 @@
                 <el-table-column
                 prop="uname"
                 label="值班人"
-                width="120">
+                width="110">
                 </el-table-column>
                 <el-table-column
                 prop="nextHandUname"
                 label="交接人"
-                width="120">
+                width="110">
                 </el-table-column>
                 <el-table-column
                 prop="lastHandUname"
                 label="接班人"
-                width="120">
+                width="110">
                 </el-table-column>
                 <el-table-column
                 label="值班开始时间"
@@ -152,7 +152,7 @@
                 <el-table-column
                 prop="otherArticle"
                 label="其他物品"
-                width="100">
+                >
                 </el-table-column>
             </el-table>
             <!-- 分页 -->
@@ -262,6 +262,7 @@ export default {
      },
     seach(){
         this.currentPage = 1
+         this.$refs.paginations.changePageNum(1)
         this.getDatas()
     },
     getDatas () {

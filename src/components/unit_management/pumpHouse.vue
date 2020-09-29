@@ -94,19 +94,17 @@
                     width="160"
                     >
                  </el-table-column>
+                
                  <el-table-column
                     prop="address"
                     label="泵"
                     align="center"
                     width="90"
                     >
+                    <template slot-scope='scope'>
+                      {{scope.row.checkList[0].status}}
+                    </template>
                  </el-table-column>
-                 <el-table-column
-                    prop="address"
-                    label="泵"
-                    align="center"
-                    width="90"
-                    >
                  </el-table-column>
                  <el-table-column
                     prop="address"
@@ -114,6 +112,9 @@
                     align="center"
                     width="90"
                     >
+                     <template slot-scope='scope'>
+                      {{scope.row.checkList[1].status}}
+                    </template>
                  </el-table-column>
                  <el-table-column
                     prop="address"
@@ -121,6 +122,9 @@
                     align="center"
                     width="90"
                     >
+                      <template slot-scope='scope'>
+                      {{scope.row.checkList[2].status}}
+                    </template>
                  </el-table-column>
                  <el-table-column
                     prop="address"
@@ -128,6 +132,9 @@
                     align="center"
                     width="90"
                     >
+                      <template slot-scope='scope'>
+                      {{scope.row.checkList[3].status}}
+                    </template>
                  </el-table-column>
                  <el-table-column
                     prop="address"
@@ -135,6 +142,9 @@
                     align="center"
                     width="90"
                     >
+                      <template slot-scope='scope'>
+                      {{scope.row.checkList[4].status}}
+                    </template>
                  </el-table-column>
                  <el-table-column
                     prop="address"
@@ -142,6 +152,9 @@
                     align="center"
                     width="90"
                     >
+                      <template slot-scope='scope'>
+                      {{scope.row.checkList[5].status}}
+                    </template>
                  </el-table-column>
                  <el-table-column
                     prop="address"
@@ -149,6 +162,19 @@
                     align="center"
                     width="90"
                     >
+                      <template slot-scope='scope'>
+                      {{scope.row.checkList[6].status}}
+                    </template>
+                 </el-table-column>
+                  <el-table-column
+                    prop="address"
+                    label="水位"
+                    align="center"
+                    width="90"
+                    >
+                      <template slot-scope='scope'>
+                      {{scope.row.checkList[7]&&scope.row.checkList[7].status}}
+                    </template>
                  </el-table-column>
                  <el-table-column
                     prop="uname"
@@ -279,8 +305,9 @@ export default {
          this.$post('/api/admin/device/inspection/info/excel',{
                startTime:this.startTime,
                 endTime:this.endTime,
-                // unitId:2511,
                 unitId:this.unitId,
+                 type:4,
+                isExpires:0
          }).then( res =>{
              if( res.data ){
                  location.href=res.data
@@ -297,6 +324,7 @@ export default {
      },
     seach(){
         this.currentPage = 1
+         this.$refs.paginations.changePageNum(1)
         this.getDatas()
     },
     getDatas () {
@@ -306,13 +334,11 @@ export default {
             data:{
                 startTime:this.startTime,
                 endTime:this.endTime,
-                // unitId:2511,
                 unitId:this.unitId,
                 pageSize:this.rows,
                 pageNum:this.currentPage,
-                uname:this.type,
-                checkTypeName:this.type1,
-                name:this.department
+                type:4,
+                isExpires:0
             }
         }).then( res =>{
             if( res.data.code ==0 ){
@@ -360,7 +386,7 @@ export default {
         this.userType = sessionStorage.getItem('userTypes')
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
-            // this.getDatas()
+            this.getDatas()
         }
     },
 }

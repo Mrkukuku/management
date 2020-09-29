@@ -305,6 +305,7 @@ export default {
     seach(){
         this.currentPage = 1
         this.getDatas()
+         this.$refs.paginations.changePageNum(1)
     },
     getDatas () {
         this.axios({
