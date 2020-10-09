@@ -273,7 +273,6 @@ export default {
             data:{
                 startTime:this.startTime,
                 endTime:this.endTime,
-                // unitId:2511,
                 unitId:this.unitId,
                 pageSize:this.rows,
                 pageNum:this.currentPage,

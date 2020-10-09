@@ -16,11 +16,11 @@
                         <el-menu-item index="1-6"><router-link to="/unitmanagement/drillTaskmanagement">演练任务</router-link></el-menu-item>
                         <el-menu-item index="1-7"><router-link to="/unitmanagement/MaintenancePlan">维修计划</router-link></el-menu-item>
                         <el-menu-item index="1-8"><router-link to="/unitmanagement/noticeManagement">公告发布</router-link></el-menu-item>
-                        <el-menu-item index="1-9"><router-link to="/unitmanagement/trainingTask">培训任务</router-link></el-menu-item> -->
-                        <el-menu-item index="1-10"><router-link to="/configurationModule/inspectionRecord">巡检记录</router-link></el-menu-item>
-                        <!-- <template v-if="userType==2">
+                        <el-menu-item index="1-9"><router-link to="/unitmanagement/trainingTask">培训任务</router-link></el-menu-item>
+                         <template v-if="userType==2">
                           <el-menu-item index="1-11"><router-link to="/unitmanagement/complaintsReportList">投诉管理</router-link></el-menu-item>
                         </template> -->
+                        <el-menu-item index="1-10"><router-link to="/configurationModule/inspectionRecord">巡检记录</router-link></el-menu-item>
                         <el-menu-item index="1-12"><router-link to="/unitmanagement/everydayRecord">每日一查</router-link></el-menu-item>
                         <el-menu-item index="1-19"><router-link to="/unitmanagement/everydatPatrol">每日巡逻</router-link></el-menu-item>
                         <!-- <el-menu-item index="1-13"><router-link to="/unitmanagement/ErPollingTask">二维码巡检</router-link></el-menu-item> -->
