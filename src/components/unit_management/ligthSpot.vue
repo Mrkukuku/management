@@ -20,16 +20,18 @@
                     border
                    >
                     <el-table-column
-                    prop="updatedTime"
+                    prop="name"
                     label="区域"
                     align="center"
                     width="140">
                     </el-table-column>
                     <el-table-column
-                    prop="updatedTime"
                     label="点检时间"
                     align="center"
-                    width="140">
+                    width="160">
+                       <template slot-scope="scope">
+                        <span >{{ scope.row.updatedTime|timeFormat }}</span>
+                    </template>
                     </el-table-column>
                     <el-table-column
                      label="点检项目"
@@ -41,7 +43,7 @@
                             align="center"
                             width="120">
                                  <template slot-scope="scope">
-                                    <span >{{ scope.row.fireViolation==1&&scope.row.fireViolationDesc.status==2&&'√'||'' }}</span>
+                                    <span >{{ scope.row.subOptionList[0] }}</span>
                                 </template>
                         </el-table-column>
                         <el-table-column
@@ -50,7 +52,7 @@
                             align="center"
                             width="120">
                                  <template slot-scope="scope">
-                                    <span >{{ scope.row.fireViolation==1&&scope.row.fireViolationDesc.status==2&&'√'||'' }}</span>
+                                    <span >{{ scope.row.subOptionList[1] }}</span>
                                 </template>
                         </el-table-column>
                         <el-table-column
@@ -59,7 +61,7 @@
                             align="center"
                             width="120">
                                  <template slot-scope="scope">
-                                    <span >{{ scope.row.fireViolation==1&&scope.row.fireViolationDesc.status==2&&'√'||'' }}</span>
+                                    <span >{{ scope.row.subOptionList[2] }}</span>
                                 </template>
                         </el-table-column>
                         <el-table-column
@@ -68,7 +70,7 @@
                             align="center"
                             width="120">
                                  <template slot-scope="scope">
-                                    <span >{{ scope.row.fireViolation==1&&scope.row.fireViolationDesc.status==2&&'√'||'' }}</span>
+                                    <span >{{ scope.row.subOptionList[3] }}</span>
                                 </template>
                         </el-table-column>
                         <el-table-column
@@ -77,7 +79,7 @@
                             align="center"
                             width="170">
                                  <template slot-scope="scope">
-                                    <span >{{ scope.row.fireViolation==1&&scope.row.fireViolationDesc.status==2&&'√'||'' }}</span>
+                                    <span >{{ scope.row.subOptionList[4] }}</span>
                                 </template>
                         </el-table-column>
                         <el-table-column
@@ -86,10 +88,9 @@
                             align="center"
                             width="140">
                                  <template slot-scope="scope">
-                                    <span >{{ scope.row.fireViolation==1&&scope.row.fireViolationDesc.status==2&&'√'||'' }}</span>
+                                    <span >{{ scope.row.subOptionList[5] }}</span>
                                 </template>
                         </el-table-column>
-
                     </el-table-column>
                     <el-table-column
                         prop="uname"
@@ -98,13 +99,13 @@
                         width="140">
                     </el-table-column>
                     <el-table-column
-                        prop="uname"
+                        prop="num"
                         align="center"
                         label="数量"
                         width="90">
                     </el-table-column>
                      <el-table-column
-                        prop="time"
+                        prop="content"
                         align="center"
                         label="备注">
                     </el-table-column>
@@ -133,26 +134,20 @@ export default {
             pollingVisible:false,
             pollingDetail:{},
             date:'',
-            auditor:""
+            taskId:""
         }
     },
     methods:{
-        editData(data){
-            this.pollingVisible =true
-            this.pollingDetail = data
-        },
         getData(){
                 this.axios({
-                url:"/api/admin/fire/control/statistics/unit/single/summary/date",
+                url:"/api/admin/device/inspection/emergency/detail",
                 method:"post",
                 data:{
-                    ...this.parameter,
-                    pageSize:10,
-                    pageNum:1,
+                  id:this.taskId
                 }
             }).then( res =>{
                 if( res.data.code ==0 ){
-                  
+                  this.tableData = res.data.data
                 }else{
                     this.$alert(res.data.msg)
                 }
@@ -164,11 +159,11 @@ export default {
         }
     },
     mounted(){
-      if(this.$route.query.unitId){
-          this.parameter = this.$route.query
+      if(this.$route.query.id){
+          this.taskId = this.$route.query.id
           this.getData()
       }else{
-        // this.goBack()
+        this.goBack()
       }
     },
    
@@ -193,9 +188,6 @@ export default {
              text-align: center;
              font-size: 29px;
         }
-     }
-     .bottom{
-        
      }
      .name{
         text-decoration:underline;

@@ -70,23 +70,26 @@
                     align="center"
                     width="160"
                     >
+                    <template slot-scope="scope">
+                        <span >{{ scope.row.updatedTime|timeFormat }}</span>
+                    </template>
                  </el-table-column>
                  <el-table-column
-                    prop="name"
+                    prop="total"
                     label="总数量"
                     align="center"
                     width="140"
                     >
                  </el-table-column>
                  <el-table-column
-                    prop="address"
+                    prop="errorCount"
                     label="异常数"
                     align="center"
                     width="160"
                     >
                  </el-table-column>
                  <el-table-column
-                    prop="address"
+                    prop="normalCount"
                     label="正常数"
                     align="center"
                     width="90"
@@ -199,15 +202,8 @@ export default {
      },
      editData(id){
          let _this = this
-        //  this.$post('/api/admin/device/inspection/single',{
-        //      id
-        //  }).then( res =>{
-        //      this.pollingVisible = true
-        //      this.pollingDetail = res.data
-        //  })
          this.$router.push({path:'/unitmanagement/ligthSpot',query:{
-            startTime:_this.startTime,
-            endTime:_this.endTime,
+             id
          }})
      },
     seach(){
@@ -216,29 +212,25 @@ export default {
          this.$refs.paginations.changePageNum(1)
     },
     getDatas () {
-        // this.axios({
-        //     url:"/api/admin/device/inspection/list",
-        //     method:"post",
-        //     data:{
-        //         startTime:this.startTime,
-        //         endTime:this.endTime,
-        //         // unitId:2511,
-        //         unitId:this.unitId,
-        //         pageSize:this.rows,          
-        //         pageNum:this.currentPage,
-        //         uname:this.type,
-        //         checkTypeName:this.type1,
-        //         name:this.department
-        //     }
-        // }).then( res =>{
-        //     if( res.data.code ==0 ){
-        //             this.tableData = res.data.data.startPage.list
-        //             this.total = res.data.data.startPage.total
-        //             this.checkList = res.data.data.deviceTypeList
-        //     }else{
-        //             this.$alert(res.data.msg)
-        //     }
-        // })
+        this.axios({
+            url:"/api/admin/device/inspection/emergency/list",
+            method:"post",
+            data:{
+                startTime:this.startTime,
+                endTime:this.endTime,
+                unitId:this.unitId,
+                pageSize:this.rows,          
+                pageNum:this.currentPage,
+                uname:this.type,
+            }
+        }).then( res =>{
+            if( res.data.code ==0 ){
+                    this.tableData = res.data.data.list
+                    this.total = res.data.data.total
+            }else{
+                    this.$alert(res.data.msg)
+            }
+        })
     },
      getData(){
          

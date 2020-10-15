@@ -109,19 +109,26 @@
                                 <el-input  v-model="ruleForm.certificateNumber"></el-input>
                             </el-form-item>
                             <el-form-item label="证书照片" :rules="[{ required: ruleForm.certificated==1,message: '请上传证书照片', trigger: 'blur'}]">
-                            <el-upload
-                                class="avatar-uploader"
-                                action=""
-                                ref="upload1"
-                                accept=".jpg,.png,.JPG,.PNG"
-                                :show-file-list="false"
-                                :on-change="beforeUpload1"
-                                :auto-upload="false">
-                                <img v-if="posterURL1" :src="posterURL1" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
+                            <div style="display:flex">
+                                <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    ref="upload1"
+                                    accept=".jpg,.png,.JPG,.PNG"
+                                    :show-file-list="false"
+                                    :on-change="beforeUpload1"
+                                    :auto-upload="false">
+                                    <img v-if="posterURL1" :src="posterURL1" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                                <el-image-viewer 
+                                v-if="showViewer" 
+                                :on-close="closeViewer" 
+                                :url-list="[posterURL1]" />
+                            </div>
                             <el-button @click="uploads(1)">上传</el-button>
                             <el-button @click="resetUploads1">取消</el-button>
+                            <el-button v-if="posterURL1" @click="showViewer=true">查看大图</el-button>
                         </el-form-item>
                         <!-- </template> -->
                         <el-form-item label="邮箱" prop="email">
@@ -141,8 +148,13 @@
                                 <img v-if="posterURL" :src="posterURL" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
+                             <el-image-viewer 
+                            v-if="showViewer1" 
+                            :on-close="closeViewer" 
+                            :url-list="[posterURL]" />
                             <el-button @click="uploads(2)">立即上传</el-button>
                             <el-button @click="resetUploads">取消</el-button>
+                             <el-button v-if="posterURL" @click="showViewer1=true">查看大图</el-button>
                         </el-form-item>
                         <el-form-item label="账号描述" prop="description">
                             <el-input type="textarea" v-model="ruleForm.description"></el-input>
@@ -190,9 +202,18 @@
                 class='workDialog'
                 :close-on-click-modal="false"
                 :before-close="closeWorkList">
-                    <template v-if="workTypeFlag==true">
                         <!-- 人员模糊查询 -->
                         <div class="personTop">
+                            当前值班类型是：
+                            <template v-if="workTypeH==2">
+                                24小时制
+                            </template>
+                            <template v-else-if="workTypeH==3">
+                               无限制
+                            </template>
+                            <template v-else>
+                                排班制
+                            </template>
                             <el-button type="primary" @click="addPersonWorkTime">新增</el-button>
                         </div>
                         <!-- 工作列表 -->
@@ -221,17 +242,8 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                    </template>
-                    <template v-else>
-                        <el-radio v-model="workType" label="1">排班制</el-radio>
-                        <el-radio v-model="workType" label="2">24小时制</el-radio>
-                        <el-radio v-model="workType" label="3">无限制</el-radio>
-                        <div style="margin-top:20px;text-align:center">
-                            <el-button @click="submitWorkType">保存</el-button>
-                            <el-button @click="closeWorkList"> 取消</el-button>
-                        </div>
                         
-                    </template>
+                        
                         <el-dialog
                             title="人员信息"
                             :visible.sync="personAddTimeDialog"
@@ -240,26 +252,15 @@
                             class='dialog'
                             :append-to-body="true"
                             :before-close="personAddTimeDialogFun">
-                            
+                                <el-radio-group  v-model="workType" @change="changeWorkType">
+                                    <el-radio :label="1">排班制</el-radio>
+                                    <el-radio :label="2">24小时制</el-radio>
+                                    <el-radio :label="3">无限制</el-radio>
+                                </el-radio-group>
                                 <el-form :model="timeDayForm" :rules="timeDayRules" ref="timeDayForm" label-width="150px" class="demo-ruleForm">
-                                    <el-form-item label="上班时间" prop="type1">
-                                        <el-select v-model="timeDayForm.startWeek" placeholder="请选择">
-                                            <el-option
-                                                v-for="item in weekData"
-                                                :key="item.id"
-                                                :label="item.name"
-                                                :value="item.id">
-                                            </el-option>
-                                        </el-select>
-                                        <el-time-picker
-                                            v-model="timeDayForm.startTime"
-                                            format='HH:mm'     
-                                            placeholder="任意时间点">
-                                        </el-time-picker>
-                                    </el-form-item>
-                                    <template v-if="workType==1">
-                                         <el-form-item label="下班时间" prop="type2">
-                                            <el-select v-model="timeDayForm.endWeek" placeholder="请选择">
+                                    <template v-if="workType!=3">
+                                        <el-form-item label="上班时间" prop="type1">
+                                            <el-select v-model="timeDayForm.startWeek" placeholder="请选择">
                                                 <el-option
                                                     v-for="item in weekData"
                                                     :key="item.id"
@@ -268,20 +269,34 @@
                                                 </el-option>
                                             </el-select>
                                             <el-time-picker
-                                                v-model="timeDayForm.endTime"
+                                                v-model="timeDayForm.startTime"
                                                 format='HH:mm'     
                                                 placeholder="任意时间点">
                                             </el-time-picker>
                                         </el-form-item>
+                                        <template v-if="workType==1">
+                                            <el-form-item label="下班时间" prop="type2">
+                                                <el-select v-model="timeDayForm.endWeek" placeholder="请选择">
+                                                    <el-option
+                                                        v-for="item in weekData"
+                                                        :key="item.id"
+                                                        :label="item.name"
+                                                        :value="item.id">
+                                                    </el-option>
+                                                </el-select>
+                                                <el-time-picker
+                                                    v-model="timeDayForm.endTime"
+                                                    format='HH:mm'     
+                                                    placeholder="任意时间点">
+                                                </el-time-picker>
+                                            </el-form-item>
+                                        </template>
                                     </template>
-                                   
                                     <el-form-item style="margin-left:100px">
                                         <el-button type="primary" @click="personTimeSubmit('timeDayForm')" v-noMoreClick>保存</el-button>
                                         <el-button @click="personAddTimeDialogFun">取消</el-button>
                                     </el-form-item>
                                 </el-form>
-
-
                         </el-dialog>
             </el-dialog>
 
@@ -396,6 +411,7 @@
 import pagination from '../Children/Pagination'
 import {Common} from './../../js/common'
 import { mapMutations } from 'vuex';
+ import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 export default {
     mixins:[Common],
     data(){
@@ -425,7 +441,6 @@ export default {
                 }else if(this.timeDayForm.endWeek==this.timeDayForm.startWeek){
                     var date1=Date.parse(this.timeDayForm.startTime);
                     var date2=Date.parse(this.timeDayForm.endTime);
-                    console.log(date1)
                     if(date1>date2){
                         callback(new Error('上班时间点不能大于下班时间点'))
                     }else{
@@ -557,8 +572,8 @@ export default {
             workVisibleList:false,//工作时间弹框
             workTimeData:[],//工作时间表格数据
             personAddTimeDialog:false,//上班时间弹框
-            workType:'1',//值班类型
-            workTypeFlag:false,//值班类型显示
+            workType:1,//值班类型
+            workTypeH:1,//值班类型之前
             weekData:[
                 {
                     id:1,
@@ -609,14 +624,21 @@ export default {
             page_size: 10,//页数
             fileLoading:false,
             uid:sessionStorage.getItem('user_id'),
-           selectType:''
+           selectType:'',
+           showViewer:false,
+           showViewer1:false,
         }
     },
     components:{
-        pagination:pagination
+        pagination:pagination,
+        ElImageViewer
     },
     methods:{
-        ...mapMutations('routeJump',['changeLogin']),
+        ...mapMutations('routeJump',['changeLogin','setMenuData']),
+        closeViewer(){
+            this.showViewer = false
+            this.showViewer1 = false
+        },
         beforeUpload(file) {       //上传前
             var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
             const extension = testmsg === 'jpg'
@@ -668,6 +690,7 @@ export default {
             }
             this.posterURL1 = URL.createObjectURL(file.raw);
             this.upload1= file.raw;
+            console.log(this.upload1)
         },
         uploads(type){  //上传图片
             var _this=this;
@@ -783,18 +806,23 @@ export default {
             this.workVisibleList=true;
         },
         closeWorkList(){//关闭上班时间列表弹框
-            this.workTypeFlag=false;
             this.workVisibleList=false;
         },
-        submitWorkType(){//上班时间类型
-            if(this.workType==3){
-                this.closeWorkList();
-            }else{
-                this.workTypeFlag=true;
+        changeWorkType(){//上班时间类型
+            var _this=this;
+            if(this.workTypeH!=this.workType){
+                this.$confirm('你确定修改值班类型？保存后将清空之前类型的值班时间列表！！！')
+                .then(()=> {
+                    
+                }).catch(function(){
+                    _this.workType=_this.workTypeH;
+                })
             }
+            
         },
         addPersonWorkTime(){//打开上班时间弹框
             this.personAddTimeDialog=true;
+            this.workType=this.workTypeH;
         },
         personTimeList(){//人员上班时间列表
             var _this=this;
@@ -806,7 +834,9 @@ export default {
                 }
             }).then(res=>{
                 if(res.data.code==0){
-                    _this.workTimeData=res.data.data;
+                    _this.workTimeData=res.data.data.list;
+                    this.workType=res.data.data.type?res.data.data.type:1;
+                    this.workTypeH=res.data.data.type?res.data.data.type:1;
                     for(var i in _this.workTimeData){
                         _this.workTimeData[i].start='周'+_this.workTimeData[i].startWeek+',时间:'+_this.workTimeData[i].startTime;
                         _this.workTimeData[i].end='周'+_this.workTimeData[i].endWeek+',时间:'+_this.workTimeData[i].endTime;
@@ -820,35 +850,59 @@ export default {
         },
         personAddTimeDialogFun(){//关闭上班时间弹框
             this.personAddTimeDialog=false;
-            this.workTypeFlag=false;
             Object.assign(this.$data.timeDayForm,this.$options.data().timeDayForm);
         },
         personTimeSubmit(name){//人员上班时间提交
-            this.$refs[name].validate((valid)=>{
-                if(valid){
-                    this.timeDayForm.uid=this.userId;
-                    var _this=this;
-                    this.axios({
-                        url   :'/api/admin/user/rota/add',
-                        method: 'post',
-                        data  : this.timeDayForm
-                    }).then(res=>{
-                        if(res.data.code==0){
-                            _this.$alert('添加成功', '提示', {
-                                confirmButtonText: 'OK',
-                                callback:() => {
-                                    _this.personAddTimeDialogFun();
-                                    _this.personTimeList();
-                                }
-                            });
-                        }else{
-                            _this.$alert(res.data.msg, '提示', {
-                                confirmButtonText: 'OK',
-                            });
+            if(this.workType==3){
+                this.axios({
+                    url   :'/api/admin/user/rota/add/unlimited',
+                    method: 'post',
+                    data  : {
+                        id:this.userId
+                    }
+                }).then(res=>{
+                    if(res.data.code==0){
+                        this.$message({
+                            type:'success',
+                            message:'保存成功'
+                        })
+                        this.personAddTimeDialogFun();
+                        this.personTimeList();
+                    }else{
+                        this.$message.error(res.data.msg)
+                    }
+                })
+            }else{
+                this.$refs[name].validate((valid)=>{
+                    if(valid){
+                        this.timeDayForm.uid=this.userId;
+                        var _this=this;
+                        var url;
+                        if(this.workType==1){
+                            url="/api/admin/user/rota/add/normal";
+                        }else if(this.workType==2){
+                            url="/api/admin/user/rota/add/day";
                         }
-                    })
-                }
-            })
+                        this.axios({
+                            url   :url,
+                            method: 'post',
+                            data  : this.timeDayForm
+                        }).then(res=>{
+                            if(res.data.code==0){
+                                _this.$alert('添加成功', '提示', {
+                                    confirmButtonText: 'OK',
+                                    callback:() => {
+                                        _this.personAddTimeDialogFun();
+                                        _this.personTimeList();
+                                    }
+                                });
+                            }else{
+                                this.$message.error(res.data.msg)
+                            }
+                        })
+                    }
+                })
+            } 
         },
         deletePersonData(id){//删除人员时间点
             var _this=this;
@@ -905,10 +959,25 @@ export default {
               sessionStorage.setItem('user_id',res.data.data.id);
               sessionStorage.setItem('unitId',res.data.data.unitId?res.data.data.unitId:-1);
               sessionStorage.setItem('userTypes',res.data.data.userType);
-              _this.$router.replace('/unitmanagement');
+
+              _this.$router.replace('/unitmanagement/userManagement');
               _this.$store.state.routeJump.openTab = [];
               _this.$store.state.routeJump.activeIndex = '/unitmanagement';
               _this.companyId=res.data.data.unitId;
+          })
+        },
+        getMenuData(){//获取菜单列表
+        // alert(333)
+            this.axios({
+            method: 'post',
+            url: '/api/admin/user/pilot/group/user',
+          }).then(res=>{
+              if(res.data.code==0){
+                    this.setMenuData({ menuData:JSON.stringify(res.data.data)})
+                    this.getuser();
+              }else{
+                  this.$message.error(res.data.msg);
+              }
           })
         },
         downFile() {//下载单位导入模板
@@ -968,7 +1037,7 @@ export default {
         userChange(data){
             if(data==6){
                 this.ruleForm.fireControlPermissions=[2,3]
-            }else if( data==4 ){
+            }else {
                 this.ruleForm.fireControlPermissions=[1]
             }
         }
@@ -977,7 +1046,7 @@ export default {
         if(this.$route.query.token){
             this.changeLogin({ Authorization: this.$route.query.token});
             sessionStorage.setItem('user_name',this.$route.query.name); 
-            this.getuser();
+            this.getMenuData();
         }else{
             this.companyId=sessionStorage.getItem('unitId');
         }
@@ -987,9 +1056,6 @@ export default {
 </script>
 <style lang="scss">
     #usermanagement{
-         .el-table{
-            border-bottom: 1px solid #EBEEF5;
-        }
         .top{
             .el-input{
                 width:180px;
@@ -997,10 +1063,14 @@ export default {
                     height:32px;
                 }
             }
+           
         }
         .el-date-range-picker__editor{
             width:140px;
         }
+        // .dialog{
+            
+        // }
         .el-dialog__body ul{
             background-color:#ffffff!important;
         }
@@ -1034,6 +1104,9 @@ export default {
             .el-dialog{
                 width: 700px!important;
                 min-height: 400px;
+            }
+            .personTop{
+                margin-bottom: 10px;
             }
         }
         .demo-ruleForm{
