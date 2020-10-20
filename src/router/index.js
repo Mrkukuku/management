@@ -175,6 +175,12 @@ export default new Router({
           meta:{keepAlive: false},
           component: () => import("@/components/unit_management/everydatPatrol.vue")
         },
+        {
+          path:"fireDuty",
+          name:"消控值班",
+          meta:{keepAlive: false},
+          component: () => import("@/components/unit_management/fireDuty.vue")
+        },
       ]
     },
     {

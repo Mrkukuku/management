@@ -329,7 +329,7 @@ export default {
     },
     handleNodeClick(data) { //点击树节点
         this.unitId = data.id
-        this.getDatas()
+        this.handleReset()
         this.getpeople()
     },
 },

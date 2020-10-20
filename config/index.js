@@ -9,7 +9,7 @@ module.exports = {
 
     // Pathss
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+    assetsPublicPath: '/',
     proxyTable: {
       '/api': {
         // target: 'http://47.99.156.10:8182',  

@@ -350,7 +350,7 @@ export default {
     },
     handleNodeClick(data) { //点击树节点
         this.unitId = data.id
-        this.getDatas()
+        this.handleReset()
         this.getpeople()
     },
 },
@@ -358,8 +358,8 @@ export default {
         this.userType = sessionStorage.getItem('userTypes')
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
-            // this.getDatas()
-            // this.getpeople()
+            this.getDatas()
+            this.getpeople()
         }
     },
 }

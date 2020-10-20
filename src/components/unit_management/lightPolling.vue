@@ -194,9 +194,14 @@ export default {
                 endTime:this.endTime,
                 // unitId:2511,
                 unitId:this.unitId,
+                "type":3,
+                "isExpires":0
          }).then( res =>{
              if( res.data ){
                  location.href=res.data
+             }
+             if( res.msg ){
+                  this.$alert(res.msg)
              }
          })
      },
@@ -235,6 +240,21 @@ export default {
      getData(){
          
      },
+     getpeople(){
+        this.axios({
+            url:"/api/admin/user/fire/inspection/list",
+            method:"post",
+            data:{
+                id:this.unitId,
+            }
+        }).then( res =>{
+            if( res.data.code ==0 ){
+               this.typeList =res.data.data
+            }else{
+                this.$alert(res.data.msg)
+            }
+        })
+    },
     handleReset () {//重置
         //   Object.assign(this.$data.ruleForm,this.$options.data().ruleForm);
         this.startTime = ''
@@ -261,7 +281,8 @@ export default {
     },
     handleNodeClick(data) { //点击树节点
         this.unitId = data.id
-        this.getDatas()
+        this.handleReset()
+        this.getpeople()
     },
 },
     mounted() {
@@ -269,6 +290,7 @@ export default {
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
             this.getDatas()
+             this.getpeople()
         }
     },
 }

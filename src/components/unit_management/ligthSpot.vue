@@ -163,7 +163,7 @@ export default {
           this.taskId = this.$route.query.id
           this.getData()
       }else{
-        this.goBack()
+            this.goBack()
       }
     },
    

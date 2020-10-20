@@ -26,6 +26,7 @@
                         <!-- <el-menu-item index="1-13"><router-link to="/unitmanagement/ErPollingTask">二维码巡检</router-link></el-menu-item> -->
                         <el-menu-item index="1-16"><router-link to="/unitmanagement/spotCheck">每月点检</router-link></el-menu-item>
                         <el-menu-item index="1-14"><router-link to="/unitmanagement/fireWatch">每月防火检查</router-link></el-menu-item>
+                        <el-menu-item index="1-20"><router-link to="/unitmanagement/fireDuty">消控值班记录</router-link></el-menu-item>
                         <el-menu-item index="1-13"><router-link to="/unitmanagement/connectList">消控交接记录</router-link></el-menu-item>
                         <!-- <el-menu-item index="1-15"><router-link to="/unitmanagement/fireFacility">消防设施维修记录</router-link></el-menu-item> -->
                         <el-menu-item index="1-17"><router-link to="/unitmanagement/pumpHouse">消防水泵房记录</router-link></el-menu-item>
