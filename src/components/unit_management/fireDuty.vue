@@ -73,40 +73,46 @@
                 >
                 </el-table-column>
                 <el-table-column
-                prop="unitName"
+                prop="createdTime"
                 label="记录时间"
-                width="140">
+                width="160">
                 </el-table-column>
                 <el-table-column
                 prop="fireControlRoomWatchTotal"
                 label="火灾报警控制器运行情况"
                 width="210">
                 <template slot-scope="scope">
-                    <span >{{ scope.row.fireControlRoomWatchTotal }}</span>
+                    <span >{{ scope.row.fireAlarmControlRunStatus==2&&'正常'||'异常 '+scope.row.fireAlarmControlRunCount }}</span>
                 </template>
                 </el-table-column>
                 <el-table-column
                 prop="a"
                 label="火灾报警控制器检查内容"
                 width="210">
+                <template slot-scope="scope">
+                    <span >{{ scope.row.fireAlarmControlCheckStatus==1&&'正常'||'异常 '+scope.row.fireAlarmControlCheckCount }}</span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="a"
                 label="控制室内其他消防系统运行情况"
                 width="220">
+                 <template slot-scope="scope">
+                    <span >{{ scope.row.controlOtherSystemRunStatus==2&&'正常'||'异常 '+scope.row.controlOtherSystemRunCount }}</span>
+                </template>
                 </el-table-column>
                 <el-table-column
-                prop="realityFireInspectionTotal"
+                prop="watchkeeper"
                 label="值班人"
                 width="120">
                 </el-table-column>
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope='scope'>
-                        <el-button
+                        <!-- <el-button
                         size="mini"
                         type="primary"
-                        @click="editData(scope.row.unitId,scope.row.unitName)">查看</el-button>
+                        @click="editData(scope.row.id)">查看</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -307,7 +313,6 @@ export default {
             tableData:[],//巡检记录
             startTime:'',
             endTime:'',
-            username:"",//单位名称
             expireTimeOptionStart: {
                 disabledDate: time => {
                     let beginDateVal = this.endTime;
@@ -349,33 +354,19 @@ export default {
                 },
             ],
             type2:'',//远程监控
-            dialogVisible:false,//详情开关
-            pollingVisible:false,//巡查任务详情开关
             dutyVisible:false,//巡查任务详情开关
-            noDetail:{},
-            unitName:'',
-            taskDate:'',
-            fireInspectionList:[],
-            fireControlRoomWatchList:[],
-            pollingDetail:{},
             dutyDetail:{}
        }
    },
  methods:{
      exportPolling(){
             this.axios({
-                url:"/api/admin/fire/control/statistics/info/export",
+                url:"/api/admin/watch/records/info/excel",
                 method:"post",
                 data:{
-                    unitName:this.username,
                     startTime:this.startTime,
                     endTime:this.endTime,
                     unitId:this.unitId,
-                    pageSize:this.total,
-                    pageNum:this.currentPage,
-                    fireInspectionStatus:this.type,
-                    fireControlRoomWatchStatus:this.type1,
-                    installStatus:this.type2,
                 }
             }).then( res =>{
                 if( res.data.code ==0 ){
@@ -387,29 +378,23 @@ export default {
                 }
             })
      },
-     closeDialog(){
-        this.dialogVisible = false
-        this.fireInspectionList=[]
-        this.fireControlRoomWatchList=[]
-        this.taskDate=''
-     },
-     dutyClick(data){//值班记录
-        this.axios({
-            url:"/api/admin/watch/records/single",
-            method:"post",
-            data:{
-                id:data.adminClockInId,
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-                this.dutyVisible = true
-                this.dutyDetail = res.data.data
-                this.dutyDetail.fireAlarmDesc = JSON.parse(this.dutyDetail.fireAlarmDesc)
-                this.dutyDetail.otherAlarmDesc = JSON.parse(this.dutyDetail.otherAlarmDesc)
-            }else{
-                this.$alert(res.data.msg)
-            }
-        })
+     editData(id){//值班记录
+        // this.axios({
+        //     url:"/api/admin/watch/records/single",
+        //     method:"post",
+        //     data:{
+        //         id,
+        //     }
+        // }).then( res =>{
+        //     if( res.data.code ==0 ){
+        //         this.dutyVisible = true
+        //         this.dutyDetail = res.data.data
+        //         this.dutyDetail.fireAlarmDesc = JSON.parse(this.dutyDetail.fireAlarmDesc)
+        //         this.dutyDetail.otherAlarmDesc = JSON.parse(this.dutyDetail.otherAlarmDesc)
+        //     }else{
+        //         this.$alert(res.data.msg)
+        //     }
+        // })
      },
  
     seach(){
@@ -417,35 +402,22 @@ export default {
         this.getDatas()
     },
     getDatas () {
-        // this.axios({
-        //     url:"/api/admin/fire/control/statistics/list",
-        //     method:"post",
-        //     data:{
-        //         unitName:this.username,
-        //         startTime:this.startTime,
-        //         endTime:this.endTime,
-        //         unitId:this.unitId,
-        //         pageSize:this.rows,
-        //         pageNum:this.currentPage,
-        //         fireInspectionStatus:this.type,
-        //         fireControlRoomWatchStatus:this.type1,
-        //         installStatus:this.type2,
-        //     }
-        // }).then( res =>{
-        //     if( res.data.code ==0 ){
-        //         if( res.data.data){
-        //             this.tableData = res.data.data.list
-        //             this.tableData&&this.tableData.map( item =>{
-        //                 item.lastLoginTime = item.lastLoginTime&&item.lastLoginTime.slice(0,10)
-        //             })
-        //             this.total = res.data.data.total
-        //         }else{
-        //              this.tableData =[]
-        //         }
-        //     }else{
-        //         this.$alert(res.data.msg)
-        //     }
-        // })
+        this.axios.post("/api/admin/watch/records/list",{
+                startTime:this.startTime,
+                endTime:this.endTime,
+                unitId:this.unitId,
+                pageSize:this.rows,
+                pageNum:this.currentPage,
+                uid:this.type,
+                errorType:this.type1
+            }).then( res =>{
+            if( res.data.code ==0 ){
+                this.tableData = res.data.list
+                this.total = res.data.total
+            }else{
+                this.$alert(res.data.msg)
+            }
+        })
     },
      getData(){
 
@@ -465,30 +437,8 @@ export default {
             }
         })
     },
-    editData (id,name) {
-        this.dialogVisible = true
-        this.unitName = name
-         this.axios({
-            url:"/api/admin/fire/control/statistics/unit/single",
-            method:"post",
-            data:{
-                startTime:this.startTime,
-                endTime:this.endTime,
-                unitId:id,
-                pageSize:10,
-                pageNum:1,
-            }
-        }).then( res =>{
-            if( res.data.code ==0 ){
-            this.noDetail= res.data.data
-            }else{
-                this.$alert(res.data.msg)
-            }
-        })
-    },
     handleReset () {//重置
         //   Object.assign(this.$data.ruleForm,this.$options.data().ruleForm);
-        this.username = ''
         this.startTime = ''
         this.endTime = ''
         this.type = ''
@@ -625,7 +575,6 @@ export default {
                         width: 78px;
                         height: 78px;
                         margin-right: 18px;
-
                     }
                 }
             }
@@ -681,7 +630,6 @@ export default {
             }
     }
     #fire_duty{
-       
         .el-table:before{
             width:0;
         }
@@ -706,9 +654,8 @@ export default {
                 cursor: pointer;
             }
         }
-
         .el-input{
-            width:128px;
+            width:158px;
         }
         .filter_text{
             width:230px;

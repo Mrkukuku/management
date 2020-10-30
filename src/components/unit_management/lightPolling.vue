@@ -214,7 +214,7 @@ export default {
     seach(){
         this.currentPage = 1
         this.getDatas()
-         this.$refs.paginations.changePageNum(1)
+        this.$refs.paginations.changePageNum(1)
     },
     getDatas () {
         this.axios({
@@ -290,7 +290,7 @@ export default {
         this.unitId = Number(sessionStorage.getItem('unitId'))
         if(  this.userType==3 ){
             this.getDatas()
-             this.getpeople()
+            this.getpeople()
         }
     },
 }

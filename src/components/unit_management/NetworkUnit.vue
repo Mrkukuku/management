@@ -786,6 +786,7 @@ export default {
                     label: '北京烤鸭'
                     }
             ],
+          
             unitStarList:[
                 {
                     value: 1,

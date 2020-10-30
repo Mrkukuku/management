@@ -1363,7 +1363,7 @@ export default {
         }else{
             this.getTreeData();
         }
-        
+       
     },
     watch:{
         filterText(val) {
